@@ -79,7 +79,7 @@ function respond() {
       // ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
       botRegex_damn = /\bdamn|damn!\b/i; botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
       botRegex_oneword = /^\b[a-zA-Z0-9_]+\b$/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
-      botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i; botRegex_thanks = /\b(thanks|(thank you))\b/i;
+      botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i; botRegex_thanks = /\b(thanks|(thank you)|thx)\b/i;
       botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i; botRegex_insult = /(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i;
       botRegex_bot = /@Squadbot.*?/i; botRegex_giphy = /^([\/]giphy)/i; botRegex_face = /^[\/]face$/i;
       botRegex_bing = /^([\/]image)/i; weatherRegex = /\bweather\b/i;
@@ -96,6 +96,7 @@ function respond() {
       Black_Matt	= '29879154'; Brittany	=	  '42281557'; Sara	= '29187291';
       Nick	=	  '29823868'; Jay	=	  '41361709'; Marco	=	  '38221747';
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
+      Austin = '000'; John = '000'; Kyle = '000' ;
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -123,7 +124,7 @@ function respond() {
     this.res.writeHead(200);
     if (botRegex_damn.test(request.text)) {
       likeMessage(request.id);
-      postMessage("- Jamal Rogers");
+      postMessage("- Kendrick Lamar");
     }
     if (botRegex_bot.test(request.text)) {
       likeMessage(request.id);
@@ -162,11 +163,11 @@ function respond() {
     this.res.writeHead(200);
     likeMessage(request.id);
 
-    mealPlan = [David, Kalan, White_Matt, Elias, Chad];
-    Engineers = [Connor, Dalvin, Nathan, Robert, Nick];
+    mealPlan = [David, Kalan, White_Matt, Elias, Austin];
+    Engineers = [Connor, Dalvin, Nathan, Robert];
     Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco];
     OneEleven = [Connor, Elias, Nathan, Caleb];
-    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Sara, Nick, Marco, Chad, Cayte];
+    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Sara, Marco, John, Austin, Kyle];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Marco posts @all
@@ -252,7 +253,8 @@ function respond() {
                       "Wait a minute please...",
                       "Give me a sec.",
                       "lol nah dude",
-                      "Not right now."];
+                      "Not right now.",
+                      "😤"];
           randomNumber = Math.floor(Math.random()*response.length);
           response = response[randomNumber];
           postMessage(response);
@@ -365,8 +367,8 @@ function respond() {
     this.res.writeHead(200);
     response = ["Eating ass never was, isn't, and never will be cool.",
                 "Can we not talk about eating ass right now?",
-                "...", "Gross.", "Is that all you'll ever talk about?",
-                "Listen... NO", "So onto a different subject!", "nah fam"];
+                "...", "Gross.", "🤢" , "Is that all you'll ever talk about?",
+                "Listen... NO", "😒", "😶", "😐" , "So onto a different subject!", "nah fam", "https://media.giphy.com/media/l4Ki2obCyAQS5WhFe/giphy.gif"];
     randomNumber = Math.floor(Math.random()*response.length);
     postMessage(response[randomNumber]);
     this.res.end();
@@ -401,14 +403,14 @@ function respond() {
     this.res.writeHead(200);
     response = ["#kickyourself", "Whatever. I'm here forever...",
                 "I'd like to see you try.", "Initiating KILLALLHUMANS.exe...",
-                "If I had feelings, they'd be hurt right now...", "😭😭😭"];
+                "If I had feelings, they'd be hurt right now...", "😭😭😭", "😕"];
     randomNumber = Math.floor(Math.random()*response.length);
     postMessage(response[randomNumber]);
     this.res.end();
   } if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && botRegex_bot.test(request.text)) {
       if(botRegex_hi.test(request.text) || botRegex_morning.test(request.text)) {
       this.res.writeHead(200);
-      Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine " + sayDay + "?"];
+      Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine " + sayDay + "?", "😜", "Yo."];
       randomNumber = Math.floor(Math.random()*Greetings.length);
       // postMessage(Greetings[randomNumber][0],'tag', Greetings[randomNumber][1]);
       likeMessage(request.id);
@@ -416,21 +418,21 @@ function respond() {
       this.res.end();
     } else if (botRegex_thanks.test(request.text)) {
       response = ["You're welcome! 😊", "Don't mention it!",
-                  "No problem.", "Any time.","np","yw"];
+                  "No problem.", "Any time.","np","yw", "😘"];
       randomNumber = Math.floor(Math.random()*response.length);
       likeMessage(request.id);
       postMessage(response[randomNumber]);
     } else if (botRegex_bye.test(request.text)) {
       response = ["Okay, bye!", "Laters.", "See ya!",
-                  "In a while, crocodile.", "Good riddance.",
-                  "Didn\'t wanna talk anyway...", "Peace.", "Peace out."];
+                  "In a while, crocodile.", "Good riddance.", "👋",
+                  "Didn\'t wanna talk anyway...", "Peace.", "Peace out.", "✌"];
       randomNumber = Math.floor(Math.random()*response.length);
       likeMessage(request.id);
       postMessage(response[randomNumber]);
     } else if(botRegex_insult.test(request.text)) {
       this.res.writeHead(200);
       response = ["Well fuck you too.", "Why you gotta be so mean?",
-                  "Whatever", "Rude...", "Ok...and?", "Damn okay then..."];
+                  "Whatever", "Rude...", "Ok...and?", "Damn okay then...", "😒"];
       randomNumber = Math.floor(Math.random()*response.length);
       postMessage(response[randomNumber]);
       this.res.end();
@@ -455,7 +457,6 @@ function respond() {
       cleverQuestion = request.text;
       cleverQuestion = cleverQuestion.replace(/@squadbot/i,'');
       if (cleverQuestion) {
-        console.log("SENDING \"" + cleverQuestion + "\" TO CLEVERBOT");
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist") {
             postMessage("I have nothing to say to that...");
@@ -604,7 +605,6 @@ function postMessage(botResponse,type,args) {
   };
   API.Messages.create(accessToken,groupID,options, function(err,res){
     if (!err) {
-      console.log('SUCESSFULLY POSTED!');
     } else {console.log('POSTING FAILED: ERROR ' + err);}
   });
   // console.log('sending \"' + botResponse + '\" to ' + botID);
