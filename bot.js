@@ -101,6 +101,7 @@ function respond() {
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
+      askme = false;
       // GET CURRENT TIME
       time = new Date();
       timeofDay = time.getHours(); timeofDay = timeofDay - 4;
@@ -132,6 +133,7 @@ function respond() {
       response = ["What?","What is it?", "?",
                   "Yes?", "I'm awake!", "How can I help?", "Huh?","You called?"];
       randomNumber = Math.floor(Math.random()*response.length);
+      askme = true;
       postMessage(response[randomNumber]);
     }
     this.res.end();
@@ -453,7 +455,7 @@ function respond() {
       }
       likeMessage(request.id);
       this.res.end();
-    } else {
+    } else if (!askme) {
       this.res.writeHead(200);
       cleverQuestion = request.text;
       cleverQuestion = cleverQuestion.replace(/@squadbot/i,'');
