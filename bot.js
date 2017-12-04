@@ -77,8 +77,9 @@ function respond() {
                 "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
                 "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
       // ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
-      botRegex_damn = /\bdamn|damn!\b/i; botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
-      botRegex_oneword = /^\b[a-zA-Z0-9_]+\b$/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
+      botRegex_damn = /damn\b/gi; botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
+      botRegex_oneword = /\s/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
+      // botRegex_oneword = /^\b[a-zA-Z0-9_]+\b$/;
       botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i; botRegex_thanks = /\b(thanks|(thank you)|thx)\b/i;
       botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i; botRegex_insult = /(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i;
       botRegex_bot = /@Squadbot.*?/i; botRegex_giphy = /^([\/]giphy)/i; botRegex_face = /^[\/]face$/i;
@@ -96,7 +97,7 @@ function respond() {
       Black_Matt	= '29879154'; Brittany	=	  '42281557'; Sara	= '29187291';
       Nick	=	  '29823868'; Jay	=	  '41361709'; Marco	=	  '38221747';
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
-      Austin = '000'; John = '000'; Kyle = '000' ;
+      Austin = '51259439'; John = '000'; Kyle = '53552393' ;
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -120,7 +121,7 @@ function respond() {
       //   ["Hi there, @" + userName + ".",[[10,(1+userName.length)],[userIDNum]]],
       //   ["Well hello @" + userName + "! I hope you're enjoying this fine " + sayDay + ".",[[11,(userName.length+1)],[userIDNum]]]
       // ];
-  if(request.text && botRegex_oneword.test(request.text)) {
+  if(request.text && !botRegex_oneword.test(request.text)) {
     this.res.writeHead(200);
     if (botRegex_damn.test(request.text)) {
       likeMessage(request.id);
@@ -219,7 +220,7 @@ function respond() {
       }
       reslength = response.length;
       response += request.name;
-      if (!(botRegex_oneword.test(request.text))) {
+      if ((botRegex_oneword.test(request.text))) {
         response += ' says: ' + request.text;
       } else {
         response += ' wants your attention.';
