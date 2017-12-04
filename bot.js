@@ -78,7 +78,7 @@ function respond() {
                 "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
       // ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
       botRegex_damn = /damn\b/gi; botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
-      botRegex_oneword = /\s/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
+      botRegex_oneword = /\s\b/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
       // botRegex_oneword = /^\b[a-zA-Z0-9_]+\b$/;
       botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i; botRegex_thanks = /\b(thanks|(thank you)|thx)\b/i;
       botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i; botRegex_insult = /(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i;
@@ -166,7 +166,7 @@ function respond() {
 
     mealPlan = [David, Kalan, White_Matt, Elias, Austin];
     Engineers = [Connor, Dalvin, Nathan, Robert];
-    Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco];
+    Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle];
     OneEleven = [Connor, Elias, Nathan, Caleb];
     AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Sara, Marco, John, Austin, Kyle];
     ExcludeFromAll = [];
