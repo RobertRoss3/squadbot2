@@ -97,7 +97,7 @@ function respond() {
       Black_Matt	= '29879154'; Brittany	=	  '42281557'; Sara	= '29187291';
       Nick	=	  '29823868'; Jay	=	  '41361709'; Marco	=	  '38221747';
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
-      Austin = '51259439'; John = '000'; Kyle = '53552393' ;
+      Austin = '51259439'; John = '25140874'; Kyle = '53552393' ;
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -168,15 +168,15 @@ function respond() {
 
     mealPlan = [David, Kalan, White_Matt, Elias, Austin];
     Engineers = [Connor, Dalvin, Nathan, Robert];
-    Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle];
+    Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
     OneEleven = [Connor, Elias, Nathan, Caleb];
     AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Sara, Marco, John, Austin, Kyle];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
-    // If Marco posts @all
-    // else if (request.user_id == '38221747') {
-    //   postMessage("Fuck off Marco...");
-    // }
+    // If Matt posts @all
+    else if (request.user_id == White_Matt) {
+      postMessage("*crickets*");
+    }
     else {
       API.Groups.show(accessToken, groupID, function(err,ret) {
         if (!err) {
@@ -445,7 +445,7 @@ function respond() {
       forum1831Regex = /^(?=.*\bForum\b)(?=.*\b1831\b).*$/im;
       rm111roomRegex = /^(?=.*\b(111|911)\b)(?=.*\bSouth\b).*$/;
       if (forum1831Regex.test(request.text)) {
-        postMessage("The code for The Forum 1831 is: \n Unknown. You'll have to be there.")
+        postMessage("The code for The Forum 1831 is: \n 939b79bb13efa6ebedd9")
       } else if (forum1415Regex.test(request.text)) {
         postMessage("The code for the Forum 1415 is: \n E483996D5FEA")
       } else if (rm111roomRegex.test(request.text)) {
