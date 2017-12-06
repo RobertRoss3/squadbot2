@@ -170,13 +170,13 @@ function respond() {
     Engineers = [Connor, Dalvin, Nathan, Robert];
     Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
     OneEleven = [Connor, Elias, Nathan, Caleb];
-    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Sara, Marco, John, Austin, Kyle];
+    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Matt posts @all
-    else if (request.user_id == White_Matt) {
-      postMessage("*crickets*");
-    }
+    // else if (request.user_id == White_Matt) {
+    //   postMessage("*crickets*");
+    // }
     else {
       API.Groups.show(accessToken, groupID, function(err,ret) {
         if (!err) {
