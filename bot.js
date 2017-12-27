@@ -224,7 +224,11 @@ function respond() {
       response += request.name;
       if ((botRegex_oneword.test(request.text))) {
         response += ' says: ' + request.text;
-      } else {
+      }
+      else if (userIDNum == last_userIDNum) {
+        response += ' says: ' + last_response;
+      }
+      else {
         response += ' wants your attention.';
       }
       usersID = [];
@@ -476,6 +480,8 @@ function respond() {
     this.res.end();
   }
   console.log(userName + " (" + request.user_id + ") POSTED: " + this.req.chunks[0]);
+  last_userName = request.name; last_userIDNum = request.user_id;
+  last_response = request.text;
 }
 
 function getMath(equation) {
