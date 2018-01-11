@@ -166,11 +166,11 @@ function respond() {
     this.res.writeHead(200);
     likeMessage(request.id);
 
-    mealPlan = [David, Kalan, White_Matt, Elias, Austin];
+    mealPlan = [David, Kalan, Elias, Austin, John, Kyle];
     Engineers = [Connor, Dalvin, Nathan, Robert];
     Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
     OneEleven = [Connor, Elias, Nathan, Caleb];
-    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle];
+    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle, Robert];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Matt posts @all
@@ -254,7 +254,7 @@ function respond() {
         //temp fix for tagging names with "squad" in it
       } else {
         var newtime = new Date().getTime() / 1000;
-        if (newtime < refresh + 120) {
+        if (newtime < refresh + 300) {
           response = ["You\'re doing that too much...",
                       "Cool it, cowboy. ",
                       "Wait a minute please...",
