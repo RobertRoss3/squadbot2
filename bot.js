@@ -254,7 +254,7 @@ function respond() {
         //temp fix for tagging names with "squad" in it
       } else {
         var newtime = new Date().getTime() / 1000;
-        if (newtime < refresh + 300) {
+        if (newtime < refresh + 120) {
           response = ["You\'re doing that too much...",
                       "Cool it, cowboy. ",
                       "Wait a minute please...",
