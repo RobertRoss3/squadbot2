@@ -68,6 +68,29 @@ var passwords = [['Forum 1415','12345679']];
 var refresh = (new Date().getTime() / 1000) - 120;
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
+      quotes = [
+      "\"Fuck money bruh, who needs that shit anyway?\" - John Stagg","\"OH MAH GOD\" - David Potters","\"Kylo Ren please don’t take my cheeks\" - David Potters",
+      "\"Sounds like what y'all were talking about was a clique. The only clique you need to know about is Brainiac, Scarecrow and sister Black Canary, because what you dealing with here, is the brotherhood. It's non-stop from this point on, in injustice, I take what I want, and after I take David, I want the gold sucka, Kalan, I'm coming for you nigga!\"- Dalvin Andrews",
+      "\"Caleb you literally look like a challenged tomato\" - Kalan McNeese","\"You're not even a whole sperm. You shared a nut.\" - Kalan McNeese","\"I'm trying to decide on whether I should say fuck off or thank you because that information is kinda useful I guess but also completely fucking not useful at the same damn time\" - Caleb O'Neill",
+      "\"I want a girl that knows I only last two minutes but she's so emotionally attached that she really be cumming\" - Kalan McNeese","\"I've lived on the edge enough to know to not\" -Byrd","\"Oh\" - Caleb O’Neill and David Potters","\"You literally suck at everything you have ever done\" - David",
+      "\"YOU SUCK AT SUCKING DICK\" - no one knows the founder so don’t even try to claim","\"It is not gay to suck your own dick\" - Dalvin Andrews","\"Did you put your fingers in her asshole?\" - David Potters","\"John: We need some trash bags \n Matt P.: Go get it then \n Man why I got to fucking do it?\" - John Stagg","\"I know who’s good at sucking dick….\" - Nathan Munns",
+      "\"Steph Curry, Chef Curry, Cayte Curry, Curry Indian food it don't matter to me. Cavs in 5\"  - Kalan McNeese","\"You make $7.25 an hour and work three hours a month\" - Marco Navarro","\"I want to have a reason to kill someone every day, whether in self defense or they were just in my way\" - Robert Ross",
+      "\"Dalvin: Wait a minute....this Steve guy has 0 manly features 🤔 is he even a bro? \n Sara: That's just because my profile pic isn't a pic of my massive dick\" - Sara Cowan","\"Why can’t we have 4th of July in the winter?\" - Caleb O'Neill","\"I got these new whammy shells that can put a hole in an elephant’s ass\" - Dalvin Andrews","\"I’m pretty sure an elephant already has a hole in its ass so that’s not saying much\" - Caleb O’Neill",
+      "\"But next spring break i'm actually getting fucking totally irreparably excruciatingly and efficiently fukkt upp. when i'm done i won't remember the previous or next five weeks\" - Robert Ross",
+      "\"SHIT, she saw me me looking!...One of my greatest fears is being roasted by a group of fine black women\" - David Potters","\"If I was an altar boy, I'd become famous by telling everyone I was raped by the Pope\"- Caleb O'Neill","\"Parents coming to visit their kids, not knowing how many times they've been dicked down here\" - Marco Navarro",
+      "\"They went down like wet cement but they were the best damn pancakes you'll ever taste\" - Caleb O’Neill","\"Marco: Man I'm about to take a mean shit","Dalvin: How mean?","Marco: Have you heard what happened to the Jews?\" - Marco Navarro","\"I kinda like French dude\" - David Potters","\"These hands bisexual\" - Jay Smith",
+      "\"SON OF A BITCH ROBERT I'M DRIVING GET OFF MY DICK\" - Kalan McNeese","\"We need to hurry this up cuz my buzz is getting gone.\" - Marco Navarro","\"I wish I could do that, just say no to chicken.\" - Matthew Potter","\"This nigga mad because he's making minimum wage and he's forty.\" - Kalan McNeese",
+      "\"Passed out is just incapacitated. Incapacitated is when your dick cums ten times. It’s a useless tool on your body.\" - David Potters","\"38 GIGS OF PORN!? That's enough to last me two weeks!\" - David Potters","\"Relax, you’re the only side hoe in my life.\" - Kalan McNeese",
+      "\"I wanna work with Amway now.\" - David Potters","\"If I fuckin’ look up Attack on Titan and I see one fuckin’ subtitle and they’re speaking in their slit-eyed language, I’m going to bomb them so hard, they’ll never come back.\" - David Potters","\"I mean I literally took a bath in a dirty puddle outside and ate a squirrel to survive, but your new phone is awesome!\" - Robert Ross",
+      "\"I love the ambiance of Olive Garden, but I’m not gonna go there if I can’t eat the food.\" - Robert Ross","\"You could just have her hand on your phone and literally beat your phone on your dick.\" - David Potters","\"I didn't dick her down but I had sex with her mouth\" - Dalvin Andrews ","\"I really wouldn’t care if Inman died today or lived forever\" - Dalvin Andrews",
+      "\"No wonder she works at a funeral home, I die everytime I see her!\" - Matt Potter","\"I wish I had a grown-ass face. I got a kid ass face and a kid ass body. I'm just a kid ass nigga.\" - Kalan McNeese","\"THEY AIN'T GETTIN MY FOOD, BITCH!\" - Robert Ross","\"When life gives you lemons you make sweet tea\" - David Potters",
+      "\"Don't blame Inman for shitting on the floor, he doesn't know what's going on anymore, his parents split up\"- Marco Navarro","\"Fuck me like the bad boy I am\"- David Potters","\"If we die, we die doing hood rat shit\"- Matt Potter","\"I'd eat your ass before I'd suck your toes\"- Dalvin Andrews","\"I move for no bitch\" - Kalan McNeese .",
+      "\"Y'all told me it was windy, motherfuckers!\" - Caleb O’Neill ","\"David, why are you shining a light in a fire?\" - Matt Potter ","\"Having a positive outlook makes you a happy person\" - Kalan Mcneese ","\"WOO! BLACK BITCHES!\" - David Potters","\"Who vaped on my gator?\" - Kalan McNeese",
+      "\"Never say no in the bedroom\" -Dalvin Andrews ","\"We don't love these hoes\" - Nathan Munns ","\"IT ENDS TONIGHT!\" - Kalan McNeese","\"Damn\" - Jamal Rogers ","\"Well there's only one thing to do unfriend him and never talk to him again\" - Caleb O’Neill ","\"I'm gonna put my dick in her nose\" - David Potters ","\"Everyone needs three portions of ass a day\" - David Potters ","\"Lemme go beat one real quick\" - David Potters ","\"Fuck with the bull, get the horns… and I'm horny.\" - Robert Ross ","\"Quit fuckin’ my truck!\" - Kalan McNeese ","\"Rise and shine Futher Muckers it is a great day to be alive\" - Caleb O’Neill ","\"If she’s fat enough, I heard the back of the kneecaps feels pretty good.\" - Dalvin Andrews ","\"I literally have a PhD in blowing\" - David Potters ","\"Dear GOD, NO\" -David Potters ",
+      "\"I just fucked that test in every hole imaginable\" - Connor O'Neill ","\"Caleb, do you even drive?\" - Connor O'Neill","\"We could be talking about sedimentary rocks and he'll just bring up ‘do you even drive’\" - Caleb O'Neill","\"Fuck Kalan, he's got me thinking that saying gay shit is cool\" - David Potters","\"Nobody beats me harder than I beat myself\" - Matt Brewton","\"Wassup nyuggggaaaaaaa\" - David Potters","\"Whenever we go to the library I'm the only person that does work, yall bitches just take selfies\" - Nick Patel ","\"Why didn't she text me backkkkk...\" - David Potters and Kalan McNeese ","\"Thank you come again lookin ass\" -Robert Ross","\"Cookie lookin ass\" - Robert Ross","\"I love when men are empowered and curve these hating hoes. This. This is maleism\" - Kalan McNeese","\"Shut up Kalan.\" - Shaunya Harden",
+      "\"I can't take all this ass eating and meat beating in one night\" - David Potters","\"Not a real dick. Not really gay.\" - Shaunya Harden","\"I was just thinking if this person has a mutant 12 incher and he's about to impale the child medieval-style some exceptions might need to be made\" - Sara Cowan",
+      "\"Remember, you get curved 100% of the times you don't try. But golden rule is to not get mad about getting curved. Just shrug it off and keep talking to her. It might sound weird but do it. She might find time later on. And if she don't you still have a friend that might help you out later on. You could have two wing girls. Shit who knows. She might be testing how you handle rejection. Some people play like that.\" - Jamal Rogers"
+    ];
       botInfo = "Hi, I'm SquadBot version 1.4! \n" +
                 "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
                 "Use /weather [now][today][this week] to get the weather for those times. \n" +
@@ -363,7 +386,15 @@ function respond() {
         } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
       });
       this.res.end();
-    } else {
+
+    } if (request.text == "/quote") {
+      this.res.writeHead(200);
+      likeMessage(request.id);
+      randomNumber = Math.floor(Math.random()*quotes.length);
+      postMessage(quotes[randomNumber]);
+      this.res.end();
+    }
+     else {
       this.res.writeHead(200);
       // postMessage("That isn't a valid command...");
     }
