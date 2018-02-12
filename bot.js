@@ -387,7 +387,7 @@ function respond() {
       });
       this.res.end();
 
-    } if (request.text == "/quote") {
+    } if (request.text == "/quote" || request.text == "/quote ") {
       this.res.writeHead(200);
       likeMessage(request.id);
       randomNumber = Math.floor(Math.random()*quotes.length);
