@@ -52,7 +52,7 @@ console.log("Loading GroupMe API...")
 API.Groups.show(accessToken, groupID, function(err,ret) {
   if (!err) {console.log("GroupMe API loaded...");
     members = ret.members;
-  } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
+  } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
 });
 
 var passwords = [['Forum 1415','12345679']];
@@ -375,7 +375,7 @@ function respond() {
           members = ret.members;
           console.log("MEMBERS: " + members.name);
           console.log("IDS: " + members.id);
-        } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
+        } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
       });
       this.res.end();
 
@@ -507,6 +507,8 @@ function respond() {
   last_response = request.text;
 }
 
+console.log("Response okay...")
+
 function getMath(equation) {
   var options = {
     host: 'api.wolframalpha.com',
@@ -537,6 +539,8 @@ function getMath(equation) {
   HTTP.request(options, callback).end();
 }
 
+console.log("Wolfram okay...")
+
 function searchGiphy(giphyToSearch) {
   var options = {
     host: 'api.giphy.com',
@@ -563,6 +567,8 @@ function searchGiphy(giphyToSearch) {
 
   HTTP.request(options, callback).end();
 }
+
+console.log("Giphy okay...")
 
 function encodeQuery(query) {
   return query.replace(/\s/g, '+');;
@@ -606,6 +612,8 @@ function xmlToJson(xml) {
 	}
 	return obj;
 };
+
+console.log("Extra stuff okay...")
 
 function postMessage(botResponse,type,args) {
   var botResponse, type, args, options, body, botReq, guid;
@@ -686,5 +694,9 @@ function getInfo(groupID) {
 
   HTTP.request(options, callback).end();
 }
+
+console.log("GroupMe API okay...")
+
+console.log("Running application...")
 
 exports.respond = respond;
