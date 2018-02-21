@@ -26,7 +26,7 @@ var cleverKey = process.env.CLEVER_KEY;
     cleverBot = new cleverbot(cleverUser,cleverKey);
     randomNumber = randomNumber = Math.floor(Math.random()*999);
     session = 'Squadbot1'+randomNumber;
-    console.log("INITIATING CLEVERBOT SESSION: " + session)
+    console.log("INITIATING CLEVERBOT SESSION: " + session + "...")
     cleverBot.setNick(session);
 var weatherKey = process.env.WEATHER_KEY;
 var mathKey = process.env.MATH_KEY;
@@ -64,6 +64,8 @@ API.Groups.show(accessToken, groupID, function(err,ret) {
     members = ret.members;
   } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
 });
+
+console.log("INITIATION COMPLETE... RUNNING APPLICATION...")
 
 var passwords = [['Forum 1415','12345679']];
 var refresh = (new Date().getTime() / 1000) - 120;
