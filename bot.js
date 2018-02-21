@@ -50,7 +50,7 @@ var forecast = new Forecast({
 
 console.log("Loading GroupMe API...")
 API.Groups.show(accessToken, groupID, function(err,ret) {
-  if (!err) {
+  if (!err) {console.log("GroupMe API loaded...");
     members = ret.members;
   } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
 });
