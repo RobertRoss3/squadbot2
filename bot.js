@@ -509,66 +509,66 @@ function respond() {
 
 console.log("Response okay...")
 
-function getMath(equation) {
-  var options = {
-    host: 'api.wolframalpha.com',
-    path: '/v2/query?input=' + equation + '&appid=' + mathKey
-  };
+// function getMath(equation) {
+//   var options = {
+//     host: 'api.wolframalpha.com',
+//     path: '/v2/query?input=' + equation + '&appid=' + mathKey
+//   };
+//
+//   var callback = function(response) {
+//     var str = '';
+//
+//     response.on('data', function(chunck){
+//       str += chunck;
+//     });
+//
+//     response.on('end', function() {
+//       var parser = new DOMParser();
+//       str = parser.parseFromString(str, "text/xml");
+//       JSONstr = xmlToJson(str);
+//       if (!(JSONstr)) {
+//         postMessage('Can\'t calculate that...');
+//       } else {
+//         var response = JSONstr;
+//         console.log("WOLFRAM RESPONSE: ");
+//         console.log(response);
+//       }
+//     });
+//   };
+//
+//   HTTP.request(options, callback).end();
+// }
+//
+// console.log("Wolfram okay...")
 
-  var callback = function(response) {
-    var str = '';
-
-    response.on('data', function(chunck){
-      str += chunck;
-    });
-
-    response.on('end', function() {
-      var parser = new DOMParser();
-      str = parser.parseFromString(str, "text/xml");
-      JSONstr = xmlToJson(str);
-      if (!(JSONstr)) {
-        postMessage('Can\'t calculate that...');
-      } else {
-        var response = JSONstr;
-        console.log("WOLFRAM RESPONSE: ");
-        console.log(response);
-      }
-    });
-  };
-
-  HTTP.request(options, callback).end();
-}
-
-console.log("Wolfram okay...")
-
-function searchGiphy(giphyToSearch) {
-  var options = {
-    host: 'api.giphy.com',
-    path: '/v1/gifs/search?q=' + encodeQuery(giphyToSearch) + '&api_key=' + GiphyapiKey
-  };
-
-  var callback = function(response) {
-    var str = '';
-
-    response.on('data', function(chunck){
-      str += chunck;
-    });
-
-    response.on('end', function() {
-      if (!(str && JSON.parse(str))) {
-        postMessage('Couldn\'t find a gif...');
-      } else {
-        var id = JSON.parse(str).data[0].id;
-        var giphyURL = 'http://i.giphy.com/' + id + '.gif';
-        postMessage(giphyURL);
-      }
-    });
-  };
-
-  HTTP.request(options, callback).end();
-}
-
-console.log("Giphy okay...")
+// function searchGiphy(giphyToSearch) {
+//   var options = {
+//     host: 'api.giphy.com',
+//     path: '/v1/gifs/search?q=' + encodeQuery(giphyToSearch) + '&api_key=' + GiphyapiKey
+//   };
+//
+//   var callback = function(response) {
+//     var str = '';
+//
+//     response.on('data', function(chunck){
+//       str += chunck;
+//     });
+//
+//     response.on('end', function() {
+//       if (!(str && JSON.parse(str))) {
+//         postMessage('Couldn\'t find a gif...');
+//       } else {
+//         var id = JSON.parse(str).data[0].id;
+//         var giphyURL = 'http://i.giphy.com/' + id + '.gif';
+//         postMessage(giphyURL);
+//       }
+//     });
+//   };
+//
+//   HTTP.request(options, callback).end();
+// }
+//
+// console.log("Giphy okay...")
 
 function encodeQuery(query) {
   return query.replace(/\s/g, '+');;
