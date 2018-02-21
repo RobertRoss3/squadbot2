@@ -34,19 +34,19 @@ var mathKey = process.env.MATH_KEY;
 
 // Initialize
 
-pg.defaults.ssl = true;
-pg.connect(process.env.DATABASE_URL, function(err, client) {
-  if (err) throw err;
-  // console.log('Connected to postgres! Getting schemas...');
-
-  client
-    .query('SELECT table_schema,table_name FROM information_schema.tables;')
-    .on('row', function(row) {
-      // console.log(JSON.stringify(row));
-
-    });
-});
-
+// pg.defaults.ssl = true;
+// pg.connect(process.env.DATABASE_URL, function(err, client) {
+//   if (err) throw err;
+//   // console.log('Connected to postgres! Getting schemas...');
+//
+//   client
+//     .query('SELECT table_schema,table_name FROM information_schema.tables;')
+//     .on('row', function(row) {
+//       // console.log(JSON.stringify(row));
+//
+//     });
+// });
+console.log("INITIATING WEATHER...")
 var forecast = new Forecast({
   service: 'darksky',
   key: weatherKey,
@@ -58,6 +58,7 @@ var forecast = new Forecast({
   }
 });
 
+console.log("INITIATING GROUPME API...")
 API.Groups.show(accessToken, groupID, function(err,ret) {
   if (!err) {
     members = ret.members;
