@@ -49,6 +49,7 @@ var forecast = new Forecast({
 });
 
 console.log("Loading GroupMe API...")
+
 API.Groups.show(accessToken, groupID, function(err,ret) {
   if (!err) {console.log("GroupMe API loaded...");
     members = ret.members;
@@ -294,44 +295,45 @@ function respond() {
     if(request.text && botRegex_giphy.test(request.text)) {
       this.res.writeHead(200);
       likeMessage(request.id);
-      searchGiphy(request.text.substring(7));
+      //searchGiphy(request.text.substring(7));
     }
     if (mathRegex.test(request.text)) {
       // getMath(request.text.substring(5));
       likeMessage(request.id);
-      Wolfram.query(request.text.substring(6), function(err, result) {
-        if(err)
-            console.log(err);
-        else {
-          if (result.queryresult.pod) {
-            answer = result.queryresult.pod[1].subpod[0].plaintext[0];
-            if (!(answer)) {
-              answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
-              // postMessage("Look at this...");
-              console.log(answer);
-              postMessage("The graph looks like this... \n" + answer);
-            } else {
-              console.log(answer);
-              response = ["I think it\'s...", "Hmm... is it",
-                          "My friend WolframAlpha says it\'s ",
-                          "My calculations say the answer is: ",
-                          "Ask your professor, my guess is ",
-                          "You can\'t do that yourself? lol It\'s ",
-                          "Oh, that\'s easy! It\'s "];
-              randomNumber = Math.floor(Math.random()*response.length);
-              postMessage(response[randomNumber]+ "\n" + answer);
-            }
-          } else {
-            answer = "I can't calculate that...";
-          }
-        }
-    });
+    //   Wolfram.query(request.text.substring(6), function(err, result) {
+    //     if(err)
+    //         console.log(err);
+    //     else {
+    //       if (result.queryresult.pod) {
+    //         answer = result.queryresult.pod[1].subpod[0].plaintext[0];
+    //         if (!(answer)) {
+    //           answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
+    //           // postMessage("Look at this...");
+    //           console.log(answer);
+    //           postMessage("The graph looks like this... \n" + answer);
+    //         } else {
+    //           console.log(answer);
+    //           response = ["I think it\'s...", "Hmm... is it",
+    //                       "My friend WolframAlpha says it\'s ",
+    //                       "My calculations say the answer is: ",
+    //                       "Ask your professor, my guess is ",
+    //                       "You can\'t do that yourself? lol It\'s ",
+    //                       "Oh, that\'s easy! It\'s "];
+    //           randomNumber = Math.floor(Math.random()*response.length);
+    //           postMessage(response[randomNumber]+ "\n" + answer);
+    //         }
+    //       } else {
+    //         answer = "I can't calculate that...";
+    //       }
+    //     }
+    // });
     }
     if (weatherRegex.test(request.text)) {
       Regexnow = /\b(now|current)\b/i; Regextoday = /\b(today|day)\b/i;
       Regexweek = /\b(this week)|(for the week)|(week)\b/i;
       // Retrieve weather information from Statesboro
       // Initialize
+      console.log("Getting current weather...");
       var forecast = new Forecast({
         service: 'darksky',
         key: weatherKey,
@@ -486,6 +488,7 @@ function respond() {
       this.res.writeHead(200);
       cleverQuestion = request.text;
       cleverQuestion = cleverQuestion.replace(/@squadbot/i,'');
+      console.log("Contacting Cleverbot AI server...");
       if (cleverQuestion) {
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist") {
@@ -666,36 +669,34 @@ function likeMessage(messageID) {
   });
 };
 
-function getInfo(groupID) {
-  var options = {
-    hostname: 'api.groupme.com',
-    path: '/v3/groups/' + groupID + '?token=' + accessToken,
-    method: 'GET'
-  };
-
-  var callback = function(response) {
-    var str = '';
-
-    response.on('data', function(chunck){
-      str += chunck;
-    });
-
-    response.on('end', function() {
-      if (!(str && JSON.parse(str))) {
-        console.log("COULD NOT GET GROUP INFO!");
-        console.log("RESULT WAS: ");
-        console.log(str);
-      } else {
-        var groupinfo = JSON.parse(str).response;
-        console.log(groupinfo);
-      }
-    });
-  };
-
-  HTTP.request(options, callback).end();
-}
-
-console.log("GroupMe API okay...")
+// function getInfo(groupID) {
+//   var options = {
+//     hostname: 'api.groupme.com',
+//     path: '/v3/groups/' + groupID + '?token=' + accessToken,
+//     method: 'GET'
+//   };
+//
+//   var callback = function(response) {
+//     var str = '';
+//
+//     response.on('data', function(chunck){
+//       str += chunck;
+//     });
+//
+//     response.on('end', function() {
+//       if (!(str && JSON.parse(str))) {
+//         console.log("COULD NOT GET GROUP INFO!");
+//         console.log("RESULT WAS: ");
+//         console.log(str);
+//       } else {
+//         var groupinfo = JSON.parse(str).response;
+//         console.log(groupinfo);
+//       }
+//     });
+//   };
+//
+//   HTTP.request(options, callback).end();
+// }
 
 console.log("Running application...")
 
