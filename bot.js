@@ -669,34 +669,34 @@ function likeMessage(messageID) {
   });
 };
 
-// function getInfo(groupID) {
-//   var options = {
-//     hostname: 'api.groupme.com',
-//     path: '/v3/groups/' + groupID + '?token=' + accessToken,
-//     method: 'GET'
-//   };
-//
-//   var callback = function(response) {
-//     var str = '';
-//
-//     response.on('data', function(chunck){
-//       str += chunck;
-//     });
-//
-//     response.on('end', function() {
-//       if (!(str && JSON.parse(str))) {
-//         console.log("COULD NOT GET GROUP INFO!");
-//         console.log("RESULT WAS: ");
-//         console.log(str);
-//       } else {
-//         var groupinfo = JSON.parse(str).response;
-//         console.log(groupinfo);
-//       }
-//     });
-//   };
-//
-//   HTTP.request(options, callback).end();
-// }
+function getInfo(groupID) {
+  var options = {
+    hostname: 'api.groupme.com',
+    path: '/v3/groups/' + groupID + '?token=' + accessToken,
+    method: 'GET'
+  };
+
+  var callback = function(response) {
+    var str = '';
+
+    response.on('data', function(chunck){
+      str += chunck;
+    });
+
+    response.on('end', function() {
+      if (!(str && JSON.parse(str))) {
+        console.log("COULD NOT GET GROUP INFO!");
+        console.log("RESULT WAS: ");
+        console.log(str);
+      } else {
+        var groupinfo = JSON.parse(str).response;
+        console.log(groupinfo);
+      }
+    });
+  };
+
+  HTTP.request(options, callback).end();
+}
 
 console.log("Running application...")
 
