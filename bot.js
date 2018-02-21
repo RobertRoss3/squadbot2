@@ -12,7 +12,7 @@ var Client = require('node-wolfram');
 var ImageService = require('groupme').ImageService;
 var Guid = require('guid');
 
-console.log("INITIATING APPLICATION...");
+console.log("Starting up...");
 
 
 //     API KEYS FOR ALL APIS USED
@@ -26,27 +26,17 @@ var cleverKey = process.env.CLEVER_KEY;
     cleverBot = new cleverbot(cleverUser,cleverKey);
     randomNumber = randomNumber = Math.floor(Math.random()*999);
     session = 'Squadbot1'+randomNumber;
-    console.log("INITIATING CLEVERBOT SESSION: " + session + "...")
-    cleverBot.setNick(session);
+    console.log("Loading Cleverbot AI session: " + session + "...")
+    cleverBot.setNick(session);+
+    cleverBot.create(function (err, session) {
+    });
+    console.log("Cleverbot loading completed...")
+
 var weatherKey = process.env.WEATHER_KEY;
 var mathKey = process.env.MATH_KEY;
     Wolfram = new Client(mathKey);
 
-// Initialize
-
-// pg.defaults.ssl = true;
-// pg.connect(process.env.DATABASE_URL, function(err, client) {
-//   if (err) throw err;
-//   // console.log('Connected to postgres! Getting schemas...');
-//
-//   client
-//     .query('SELECT table_schema,table_name FROM information_schema.tables;')
-//     .on('row', function(row) {
-//       // console.log(JSON.stringify(row));
-//
-//     });
-// });
-console.log("INITIATING WEATHER...")
+console.log("Loading weather API...")
 var forecast = new Forecast({
   service: 'darksky',
   key: weatherKey,
@@ -58,17 +48,16 @@ var forecast = new Forecast({
   }
 });
 
-console.log("INITIATING GROUPME API...")
+console.log("Loading GroupMe API...")
 API.Groups.show(accessToken, groupID, function(err,ret) {
   if (!err) {
     members = ret.members;
   } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
 });
 
-console.log("INITIATION COMPLETE... RUNNING APPLICATION...")
-
 var passwords = [['Forum 1415','12345679']];
 var refresh = (new Date().getTime() / 1000) - 120;
+
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       quotes = [
@@ -578,13 +567,6 @@ function searchGiphy(giphyToSearch) {
 function encodeQuery(query) {
   return query.replace(/\s/g, '+');;
 }
-
-
-cleverBot.create(function (err, session) {
-  // session is your session name, it will either be as you set it previously, or cleverbot.io will generate one for you
-
-  // Woo, you initialized cleverbot.io.  Insert further code here
-});
 
 // Changes XML to JSON
 function xmlToJson(xml) {
