@@ -59,6 +59,15 @@ API.Groups.show(accessToken, groupID, function(err,ret) {
 var passwords = [['Forum 1415','12345679']];
 var refresh = (new Date().getTime() / 1000) - 120;
 
+// time arg is in milliseconds
+function delay(time) {
+  var d1 = new Date();
+  var d2 = new Date();
+  while (d2.valueOf() < d1.valueOf() + time) {
+    d2 = new Date();
+  }
+}
+
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       quotes = [
@@ -295,38 +304,38 @@ function respond() {
     if(request.text && botRegex_giphy.test(request.text)) {
       this.res.writeHead(200);
       likeMessage(request.id);
-      //searchGiphy(request.text.substring(7));
+      searchGiphy(request.text.substring(7));
     }
     if (mathRegex.test(request.text)) {
-      // getMath(request.text.substring(5));
+      getMath(request.text.substring(5));
       likeMessage(request.id);
-    //   Wolfram.query(request.text.substring(6), function(err, result) {
-    //     if(err)
-    //         console.log(err);
-    //     else {
-    //       if (result.queryresult.pod) {
-    //         answer = result.queryresult.pod[1].subpod[0].plaintext[0];
-    //         if (!(answer)) {
-    //           answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
-    //           // postMessage("Look at this...");
-    //           console.log(answer);
-    //           postMessage("The graph looks like this... \n" + answer);
-    //         } else {
-    //           console.log(answer);
-    //           response = ["I think it\'s...", "Hmm... is it",
-    //                       "My friend WolframAlpha says it\'s ",
-    //                       "My calculations say the answer is: ",
-    //                       "Ask your professor, my guess is ",
-    //                       "You can\'t do that yourself? lol It\'s ",
-    //                       "Oh, that\'s easy! It\'s "];
-    //           randomNumber = Math.floor(Math.random()*response.length);
-    //           postMessage(response[randomNumber]+ "\n" + answer);
-    //         }
-    //       } else {
-    //         answer = "I can't calculate that...";
-    //       }
-    //     }
-    // });
+      Wolfram.query(request.text.substring(6), function(err, result) {
+        if(err)
+            console.log(err);
+        else {
+          if (result.queryresult.pod) {
+            answer = result.queryresult.pod[1].subpod[0].plaintext[0];
+            if (!(answer)) {
+              answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
+              // postMessage("Look at this...");
+              console.log(answer);
+              postMessage("The graph looks like this... \n" + answer);
+            } else {
+              console.log(answer);
+              response = ["I think it\'s...", "Hmm... is it",
+                          "My friend WolframAlpha says it\'s ",
+                          "My calculations say the answer is: ",
+                          "Ask your professor, my guess is ",
+                          "You can\'t do that yourself? lol It\'s ",
+                          "Oh, that\'s easy! It\'s "];
+              randomNumber = Math.floor(Math.random()*response.length);
+              postMessage(response[randomNumber]+ "\n" + answer);
+            }
+          } else {
+            answer = "I can't calculate that...";
+          }
+        }
+    });
     }
     if (weatherRegex.test(request.text)) {
       Regexnow = /\b(now|current)\b/i; Regextoday = /\b(today|day)\b/i;
@@ -512,66 +521,66 @@ function respond() {
 
 console.log("Response okay...")
 
-// function getMath(equation) {
-//   var options = {
-//     host: 'api.wolframalpha.com',
-//     path: '/v2/query?input=' + equation + '&appid=' + mathKey
-//   };
-//
-//   var callback = function(response) {
-//     var str = '';
-//
-//     response.on('data', function(chunck){
-//       str += chunck;
-//     });
-//
-//     response.on('end', function() {
-//       var parser = new DOMParser();
-//       str = parser.parseFromString(str, "text/xml");
-//       JSONstr = xmlToJson(str);
-//       if (!(JSONstr)) {
-//         postMessage('Can\'t calculate that...');
-//       } else {
-//         var response = JSONstr;
-//         console.log("WOLFRAM RESPONSE: ");
-//         console.log(response);
-//       }
-//     });
-//   };
-//
-//   HTTP.request(options, callback).end();
-// }
-//
-// console.log("Wolfram okay...")
+function getMath(equation) {
+  var options = {
+    host: 'api.wolframalpha.com',
+    path: '/v2/query?input=' + equation + '&appid=' + mathKey
+  };
 
-// function searchGiphy(giphyToSearch) {
-//   var options = {
-//     host: 'api.giphy.com',
-//     path: '/v1/gifs/search?q=' + encodeQuery(giphyToSearch) + '&api_key=' + GiphyapiKey
-//   };
-//
-//   var callback = function(response) {
-//     var str = '';
-//
-//     response.on('data', function(chunck){
-//       str += chunck;
-//     });
-//
-//     response.on('end', function() {
-//       if (!(str && JSON.parse(str))) {
-//         postMessage('Couldn\'t find a gif...');
-//       } else {
-//         var id = JSON.parse(str).data[0].id;
-//         var giphyURL = 'http://i.giphy.com/' + id + '.gif';
-//         postMessage(giphyURL);
-//       }
-//     });
-//   };
-//
-//   HTTP.request(options, callback).end();
-// }
-//
-// console.log("Giphy okay...")
+  var callback = function(response) {
+    var str = '';
+
+    response.on('data', function(chunck){
+      str += chunck;
+    });
+
+    response.on('end', function() {
+      var parser = new DOMParser();
+      str = parser.parseFromString(str, "text/xml");
+      JSONstr = xmlToJson(str);
+      if (!(JSONstr)) {
+        postMessage('Can\'t calculate that...');
+      } else {
+        var response = JSONstr;
+        console.log("WOLFRAM RESPONSE: ");
+        console.log(response);
+      }
+    });
+  };
+
+  HTTP.request(options, callback).end();
+}
+
+console.log("Wolfram okay...")
+
+function searchGiphy(giphyToSearch) {
+  var options = {
+    host: 'api.giphy.com',
+    path: '/v1/gifs/search?q=' + encodeQuery(giphyToSearch) + '&api_key=' + GiphyapiKey
+  };
+
+  var callback = function(response) {
+    var str = '';
+
+    response.on('data', function(chunck){
+      str += chunck;
+    });
+
+    response.on('end', function() {
+      if (!(str && JSON.parse(str))) {
+        postMessage('Couldn\'t find a gif...');
+      } else {
+        var id = JSON.parse(str).data[0].id;
+        var giphyURL = 'http://i.giphy.com/' + id + '.gif';
+        postMessage(giphyURL);
+      }
+    });
+  };
+
+  HTTP.request(options, callback).end();
+}
+
+console.log("Giphy okay...")
 
 function encodeQuery(query) {
   return query.replace(/\s/g, '+');;
@@ -621,6 +630,7 @@ console.log("Extra stuff okay...")
 function postMessage(botResponse,type,args) {
   var botResponse, type, args, options, body, botReq, guid;
   guid = Guid.create();
+  delay(1000);
   if(type=='tag'){
     options = {
     'message':{
