@@ -72,6 +72,13 @@ function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       quotes = [
       "\"Fuck money bruh, who needs that shit anyway?\" - John Stagg","\"OH MAH GOD\" - David Potters","\"Kylo Ren please don’t take my cheeks\" - David Potters",
+      "\"Is it wrong for a man to get a boner when he is getting hit in the face?\" - Caleb O’Neill","\"Brock Turner can still get hired to be a gynecologist\" - Robert Ross","\"Robert fuck you, always talking shit about my hair\" - John Stagg","\"I once bought a $1200 dog for a girl to have us break up a month later\" - Nathan Munns",
+      "\"I shit myself in class today while calling my professor over, he came over and his face shriveled up but he had to act like nothing smelled as he spoke to me\" - Dalvin Andrews","\"Byrd, no one literally fucking cares idk why you always tell us every single time you genius piece of ass you\" - Kalan McNeese","\"Last I knew, he was in my ass\" - Byrd",
+      "\"We fucked\" - Nathan Munns","\"Saturday, I’m literally passing out in one of the squares in Savannah\" - John Stagg","\"It’s fine, okay. Don’t even worry about it\" - Robert Ross regarding any situation that could cause irreparable damage","\"Well goodnight everyone I feel like my ears and brain have been molested tonight but it’s all fine and dandy because it’s nothing a life of alcohol abuse and sleep can’t fix so I will see you guys tomorrow.\" - Caleb O’Neill",
+      "\"You know what you should say… why did the bartender ask if he needed a mop? Cause he’s a fucking dumbass that doesn’t know that’s a skeleton\" - Kyle Ford","\"I need a boyfriend.\" - SquadBot","\"It’s just an egg, John, he’s gonna crack it. It’s not like he’s gonna plant it or something.\" - Matt Potter","\"I would rather be a raper than to be raped.\" - Kalan McNeese",
+      "\"Slip it in her drink, and in the blink of an eye, I can make a white girl look chink.\" - Tyler the Creator","\"This man straight up retarded\" - David Potters","\"Two asses don't make a vagina\" - Connor O'Neill","\"The only reason I knew where I was last night was because I checked my bank statement this morning\" - John Stagg",
+      "\"I have the worst presentation time this semester: the week after spring break. I might still be hungover\" - Marco Navarro","\"A nigga can’t even die in his own room anymore\" - Robert Ross","\"If you look past the shady dealings and gunshots, this is luxury living\" - Caleb O’Neill",
+      "\"I got out of jail that night and next morning got a 97 on my presentation\" - John Stagg","\"That’s why I take so many naps, I got nothing to be awake for.\" - John Stagg",
       "\"Sounds like what y'all were talking about was a clique. The only clique you need to know about is Brainiac, Scarecrow and sister Black Canary, because what you dealing with here, is the brotherhood. It's non-stop from this point on, in injustice, I take what I want, and after I take David, I want the gold sucka, Kalan, I'm coming for you nigga!\"- Dalvin Andrews",
       "\"Caleb you literally look like a challenged tomato\" - Kalan McNeese","\"You're not even a whole sperm. You shared a nut.\" - Kalan McNeese","\"I'm trying to decide on whether I should say fuck off or thank you because that information is kinda useful I guess but also completely fucking not useful at the same damn time\" - Caleb O'Neill",
       "\"I want a girl that knows I only last two minutes but she's so emotionally attached that she really be cumming\" - Kalan McNeese","\"I've lived on the edge enough to know to not\" -Byrd","\"Oh\" - Caleb O’Neill and David Potters","\"You literally suck at everything you have ever done\" - David",
@@ -114,7 +121,7 @@ function respond() {
       tagRegex_mealplan = /@(food|meal plan|mealplan)/i; tagRegex_engineers = /@engineers/i;
       tagRegex_forum = /@forum/i; tagRegex_oneeleven = /@(111|911)/i;
       tagRegex_GSU = /@(GSU|southern)/i; botRegex_joke = /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i;
-      botRegex_kick = /#kicksquadbot/i;
+      botRegex_kick = /#kicksquadbot/i; tagRegex_girls = /@(girls|ladies|women)/i; tagRegex_guys = /@(guys|gents|men|boys|fellas)/i;
       // ALL MEMBERS IN THE GROUP
       Connor	=	'30824774'; Elias	= '24488525'; White_Matt	=	'18341900';
       Caleb	=	  '31575032'; Dalvin	= '29824624'; David	= '18252184';
@@ -123,6 +130,7 @@ function respond() {
       Nick	=	  '29823868'; Jay	=	  '41361709'; Marco	=	  '38221747';
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
       Austin = '51259439'; John = '25140874'; Kyle = '53552393' ;
+      Lauren = '8351131'; Amy = '28852419'; Phina = '00000000'; Dakota = '00000000';
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -187,6 +195,8 @@ function respond() {
       || tagRegex_mealplan.test(request.text)
       || tagRegex_engineers.test(request.text)
       || tagRegex_GSU.test(request.text))
+      || tagRegex_girls.test(request.text))
+      || tagRegex_guys.test(request.text))
   ) {
     this.res.writeHead(200);
     likeMessage(request.id);
@@ -195,7 +205,9 @@ function respond() {
     Engineers = [Connor, Dalvin, Nathan, Robert];
     Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
     OneEleven = [Connor, Elias, Nathan, Caleb];
-    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle, Robert];
+    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle, Robert, Lauren];
+    Guys = [Kalan, Austin, White_Matt, Caleb, Nathan, Connor, Robert, Kyle, Dakota, Elias, Dalvin, Marco, John, David];
+    Girls = [Amy, Lauren, Sara, Phina, Brittany, Tori];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Matt posts @all
@@ -224,6 +236,21 @@ function respond() {
                     "Anyone with a meal plan, ",
                     "Landy squad, ", "Lakeside crew, ",
                     "Those who would like to eat, "];
+        randomNumber = Math.floor(Math.random()*response.length);
+        response = response[randomNumber];
+      }
+      else if (tagRegex_girls.test(request.text)) {
+        response = ["Ladies, ",
+                    "Womens, ",
+                    "Those who identify as female, ",
+                    "AYO LADIES: "];
+        randomNumber = Math.floor(Math.random()*response.length);
+        response = response[randomNumber];
+      } else if (tagRegex_guys.test(request.text)) {
+        response = ["Men, ",
+                    "Dudes, ",
+                    "Guys, ", "Listen fellas, ",
+                    "Good day gents, "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else if (tagRegex_engineers.test(request.text)) {
@@ -653,23 +680,6 @@ function postMessage(botResponse,type,args) {
     if (!err) {
     } else {console.log('POSTING FAILED: ERROR ' + err);}
   });
-  // console.log('sending \"' + botResponse + '\" to ' + botID);
-  //
-  // botReq = HTTPS.request(options, function(res) {
-  //     if(res.statusCode == 202) {
-  //       //neat
-  //     } else {
-  //       console.log('rejecting bad status code ' + res.statusCode);
-  //     }
-  // });
-  //
-  // botReq.on('error', function(err) {
-  //   console.log('error posting message '  + JSON.stringify(err));
-  // });
-  // botReq.on('timeout', function(err) {
-  //   console.log('timeout posting message '  + JSON.stringify(err));
-  // });
-  // botReq.end(JSON.stringify(body));
 };
 
 function likeMessage(messageID) {
