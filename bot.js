@@ -211,9 +211,9 @@ function respond() {
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Matt posts @all
-    // else if (request.user_id == White_Matt) {
-    //   postMessage("*crickets*");
-    // }
+    else if (request.user_id == John) {
+      postMessage("*crickets*");
+    }
     else {
       API.Groups.show(accessToken, groupID, function(err,ret) {
         if (!err) {
