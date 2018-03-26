@@ -194,8 +194,8 @@ function respond() {
       || tagRegex_oneeleven.test(request.text)
       || tagRegex_mealplan.test(request.text)
       || tagRegex_engineers.test(request.text)
-      || tagRegex_GSU.test(request.text))
-      || tagRegex_girls.test(request.text))
+      || tagRegex_GSU.test(request.text)
+      || tagRegex_girls.test(request.text)
       || tagRegex_guys.test(request.text))
   ) {
     this.res.writeHead(200);
