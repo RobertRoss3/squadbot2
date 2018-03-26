@@ -10,6 +10,7 @@
     "cleverbot.io": "^1.0.4",
     "cool-ascii-faces": "~1.3.x",
     "director": "",
+    "es6-promise": "^4.2.4",
     "forecast": "^0.3.0",
     "groupme": "^0.5.7",
     "guid": "0.0.12",
