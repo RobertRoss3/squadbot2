@@ -292,6 +292,8 @@ function respond() {
             || (tagRegex_mealplan.test(request.text) && mealPlan.indexOf(members[i].user_id) > -1)
             || (tagRegex_engineers.test(request.text) && Engineers.indexOf(members[i].user_id) > -1)
             || (tagRegex_GSU.test(request.text) && AtGSU.indexOf(members[i].user_id) > -1)
+            || (tagRegex_guys.test(request.text) && Guys.indexOf(members[i].user_id) > -1)
+            || (tagRegex_girls.test(request.text) && Girls.indexOf(members[i].user_id) > -1)
             || (botRegex_all.test(request.text) && ExcludeFromAll.indexOf(members[i].user_id) == -1))
             {
             usersID[i] = members[i].user_id;
