@@ -1,10 +1,13 @@
 {
   "name": "Squadbot",
   "version": "0.1.2",
-  "description": "A sample Node.js app using Express 4",
+  "description": "A Cool Bot For Squad",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
+  },
+  "engines": {
+    "node": "8.9.4"
   },
   "dependencies": {
     "cleverbot.io": "^1.0.4",
