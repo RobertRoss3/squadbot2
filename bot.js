@@ -130,7 +130,7 @@ function respond() {
       Nick	=	  '29823868'; Jay	=	  '41361709'; Marco	=	  '38221747';
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
       Austin = '51259439'; John = '25140874'; Kyle = '53552393' ;
-      Lauren = '8351131'; Amy = '28852419'; Phina = '00000000'; Dakota = '00000000';
+      Lauren = '8351131'; Amy = '28852419'; Phina = '56225693'; Dakota = '00000000';
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -211,9 +211,9 @@ function respond() {
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If Matt posts @all
-    else if (request.user_id == John) {
-      postMessage("*crickets*");
-    }
+    // else if (request.user_id == John) {
+    //   postMessage("*crickets*");
+    // }
     else {
       API.Groups.show(accessToken, groupID, function(err,ret) {
         if (!err) {
@@ -238,8 +238,7 @@ function respond() {
                     "Those who would like to eat, "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
-      }
-      else if (tagRegex_girls.test(request.text)) {
+      } else if (tagRegex_girls.test(request.text)) {
         response = ["Ladies, ",
                     "Womens, ",
                     "Those who identify as female, ",
