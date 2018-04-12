@@ -133,6 +133,7 @@ function respond() {
       botRegex_joke = /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i;
       botRegex_kick = /#kicksquadbot/i;
       botRegex_quote = /^([\/]quote)/i;
+      botRegex_8ball = /^([\/]8ball)/i;
 
       botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i;
       botRegex_bot = /@Squadbot.*?/i;
@@ -254,24 +255,24 @@ function respond() {
       } else if (tagRegex_oneeleven.test(request.text)) {
         response = '111 crew, ';
       } else if (tagRegex_mealplan.test(request.text)) {
-        response = ["Food people, ",
+        response = ["Food people, ", "Humans whomst eat food, ",
                     "Anyone with a meal plan, ",
                     "Landy squad, ", "Lakeside crew, ",
-                    "Those who would like to eat, "];
+                    "Those who would like to eat, ", "🍔: "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else if (tagRegex_girls.test(request.text)) {
         response = ["Ladies, ",
                     "Womens, ",
                     "Those who identify as female, ",
-                    "AYO LADIES: "];
+                    "AYO LADIES: ", "👩: "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else if (tagRegex_guys.test(request.text)) {
         response = ["Men, ",
                     "Dudes, ",
                     "Guys, ", "Listen fellas, ",
-                    "Good day gents, "];
+                    "Good day gents, ", "👨"];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else if (tagRegex_engineers.test(request.text)) {
@@ -281,7 +282,7 @@ function respond() {
                     "Hey everybody at GSU, ",
                     "LISTEN UP, ",
                     "All humans in Statesboro, ",
-                    "Those in the GSU area, "];
+                    "Those in the GSU area, ", "EAGLES: "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else {
@@ -469,8 +470,29 @@ function respond() {
 
       }
       this.res.end();
-    }
-     else {
+    } if (botRegex_8ball.test(request.text)){
+      this.res.writeHead(200);
+      likeMessage(request.id);
+      if(botRegex_oneword.test(request.text)){
+        response1 = ["My sources say ","Hmm... I'm gonna go with ", "Um... ", "Dude, ", "I think we both know the answer is ", "Let's just say ",
+                      "How about ", "The spirits tell me ", "I feel like I should say ", "Well, " + userName + ", I'm gonna say ", "I'm legally required to say "];
+
+        response2 = [ "yes","most likely, if you're not an idiot","definitely yes","yeah","it is certain","yussssss","absolutely","yes, but only if Sara says it's okay",
+                      "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes.","yes... I think.",
+                      "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah",
+                      "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
+                      "fuck no","no","absolutely not","noooooooooooo","yes! jk, no"];
+
+        randomNumber1 = Math.floor(Math.random()*response1.length);
+        randomNumber2 = Math.floor(Math.random()*response2.length);
+
+        response = "🎱 " + response1[randomNumber1] + response2[randomNumber2]  + ".";
+        postMessage(response);
+      } else {
+        postMessage("🎱 You have to ask a yes or no question.");
+      }
+      this.res.end();
+    } else {
       this.res.writeHead(200);
       // postMessage("That isn't a valid command...");
     }
@@ -480,7 +502,7 @@ function respond() {
   if((request.sender_type != "bot" && request.user_id != '43525551' ) && request.text && botRegex_ass.test(request.text)) {
     this.res.writeHead(200);
     response = ["Eating ass never was, isn't, and never will be cool.",
-                "Can we not talk about eating ass right now?",
+                "Can we not talk about eating ass right now?", userName + " NO",
                 "...", "Gross.", "🤢" , "Is that all you'll ever talk about?",
                 "Listen... NO", "😒", "😶", "😐" , "So onto a different subject!", "nah fam", "https://media.giphy.com/media/l4Ki2obCyAQS5WhFe/giphy.gif"];
     randomNumber = Math.floor(Math.random()*response.length);
