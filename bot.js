@@ -474,17 +474,21 @@ function respond() {
       this.res.writeHead(200);
       likeMessage(request.id);
       if(botRegex_oneword.test(request.text)){
+	names = ["Sara", "Lauren", "Amy", "Elias", "your mom", "your neighbor", "your conscience"];
+	      
+	randomNumber1 = Math.floor(Math.random()*response1.length);
+        randomNumber2 = Math.floor(Math.random()*response2.length);
+	randomNumber3 = Math.floor(Math.random()*names.length);
+	      
         response1 = ["My sources say ","Hmm... I'm gonna go with ", "Um... ", "Dude, ", "I think we both know the answer is ", "Let's just say ",
                       "How about ", "The spirits tell me ", "I feel like I should say ", "Well, " + userName + ", I'm gonna say ", "I'm legally required to say "];
 
-        response2 = [ "yes","most likely, if you're not an idiot","definitely yes","yeah","it is certain","yussssss","absolutely","yes, but only if Sara says it's okay",
-                      "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes","yes... I think",
-                      "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah",
-                      "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
-                      "fuck no","no","absolutely not","noooooooooooo","yes! jk, no"];
-
-        randomNumber1 = Math.floor(Math.random()*response1.length);
-        randomNumber2 = Math.floor(Math.random()*response2.length);
+        response2 = [ 
+                "fuck no","no","absolutely not","noooooooooooo","yes! jk, no", "yes","most likely, if you're not an idiot","definitely yes","yeah","it is certain","yussssss","absolutely","yes, but only if " + names[randomNumber3] + " says it's okay",
+                 "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes","yes... I think",
+                 "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
+                 "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah"
+                 ];
 
         response = "🎱 " + response1[randomNumber1] + response2[randomNumber2]  + ".";
         postMessage(response);
