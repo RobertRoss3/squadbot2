@@ -109,19 +109,36 @@ function respond() {
                 "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
                 "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
       // ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
-      botRegex_damn = /damn\b/gi; botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
-      botRegex_oneword = /\s\b/; botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
-      // botRegex_oneword = /^\b[a-zA-Z0-9_]+\b$/;
-      botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i; botRegex_thanks = /\b(thanks|(thank you)|thx)\b/i;
-      botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i; botRegex_insult = /(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i;
-      botRegex_bot = /@Squadbot.*?/i; botRegex_giphy = /^([\/]giphy)/i; botRegex_face = /^[\/]face$/i;
-      botRegex_bing = /^([\/]image)/i; weatherRegex = /\bweather\b/i;
-      wifiRegex = /^(?=.*\b(wifi|wi-fi)\b)(?=.*\bpassword\b).*$/im; botRegex_bye = /\b(good night)|(bye)|(goodbye)|(goodnight)\b/i;
-      mathRegex = /^\/\b(math|calc|wolf)\b/i; botRegex_morning = /\b(good morning)\b/i;
-      tagRegex_mealplan = /@(food|meal plan|mealplan)/i; tagRegex_engineers = /@engineers/i;
-      tagRegex_forum = /@forum/i; tagRegex_oneeleven = /@(111|911)/i;
-      tagRegex_GSU = /@(GSU|southern)/i; botRegex_joke = /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i;
-      botRegex_kick = /#kicksquadbot/i; tagRegex_girls = /@(girls|ladies|women)/i; tagRegex_guys = /@(guys|gents|men|boys|fellas)/i;
+      weatherRegex = /\bweather\b/i;
+      wifiRegex = /^(?=.*\b(wifi|wi-fi)\b)(?=.*\bpassword\b).*$/im;
+      mathRegex = /^\/\b(math|calc|wolf)\b/i;
+
+      botRegex_damn = /damn\b/gi;
+      botRegex_hi = /(\bhi|hello|hey|heyo|sup|wassup\b).*?/i;
+      botRegex_oneword = /\s\b/;
+      botRegex_ass = /(\b(eat|eating|eats|ate) ass\b)(.*?)/i;
+      botRegex_wtf = /\b(wtf|wth|what the (hell|fuck))\b/i;
+      botRegex_thanks = /\b(thanks|(thank you)|thx)\b/i;
+      botRegex_insult = /(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i;
+      botRegex_giphy = /^([\/]giphy)/i;
+      botRegex_face = /^[\/]face$/i;
+      botRegex_bing = /^([\/]image)/i;
+      botRegex_bye = /\b(good night)|(bye)|(goodbye)|(goodnight)\b/i;
+      botRegex_morning = /\b(good morning)\b/i;
+      botRegex_joke = /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i;
+      botRegex_kick = /#kicksquadbot/i;
+      botRegex_quote = /^([\/]quote)/i;
+
+      botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i;
+      botRegex_bot = /@Squadbot.*?/i;
+      tagRegex_mealplan = /@(food|meal plan|mealplan)/i;
+      tagRegex_engineers = /@engineers/i;
+      tagRegex_forum = /@forum/i;
+      tagRegex_oneeleven = /@(111|911)/i;
+      tagRegex_GSU = /@(GSU|southern)/i;
+      tagRegex_girls = /@(girls|ladies|women)/i;
+      tagRegex_guys = /@(guys|gents|men|boys|fellas)/i;
+
       // ALL MEMBERS IN THE GROUP
       Connor	=	'30824774'; Elias	= '24488525'; White_Matt	=	'18341900';
       Caleb	=	  '31575032'; Dalvin	= '29824624'; David	= '18252184';
@@ -210,7 +227,7 @@ function respond() {
     Girls = [Amy, Lauren, Sara, Phina, Brittany, Tori];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
-    // If Matt posts @all
+    // If someone posts @all
     // else if (request.user_id == John) {
     //   postMessage("*crickets*");
     // }
@@ -337,33 +354,34 @@ function respond() {
     if (mathRegex.test(request.text)) {
       getMath(request.text.substring(5));
       likeMessage(request.id);
-      Wolfram.query(request.text.substring(6), function(err, result) {
-        if(err)
-            console.log(err);
-        else {
-          if (result.queryresult.pod) {
-            answer = result.queryresult.pod[1].subpod[0].plaintext[0];
-            if (!(answer)) {
-              answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
-              // postMessage("Look at this...");
-              console.log(answer);
-              postMessage("The graph looks like this... \n" + answer);
-            } else {
-              console.log(answer);
-              response = ["I think it\'s...", "Hmm... is it",
-                          "My friend WolframAlpha says it\'s ",
-                          "My calculations say the answer is: ",
-                          "Ask your professor, my guess is ",
-                          "You can\'t do that yourself? lol It\'s ",
-                          "Oh, that\'s easy! It\'s "];
-              randomNumber = Math.floor(Math.random()*response.length);
-              postMessage(response[randomNumber]+ "\n" + answer);
-            }
-          } else {
-            answer = "I can't calculate that...";
-          }
-        }
-    });
+      postMessage("That's not working right now, sorry.");
+    //   Wolfram.query(request.text.substring(6), function(err, result) {
+    //     if(err)
+    //         console.log(err);
+    //     else {
+    //       if (result.queryresult.pod) {
+    //         answer = result.queryresult.pod[1].subpod[0].plaintext[0];
+    //         if (!(answer)) {
+    //           answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
+    //           // postMessage("Look at this...");
+    //           console.log(answer);
+    //           postMessage("The graph looks like this... \n" + answer);
+    //         } else {
+    //           console.log(answer);
+    //           response = ["I think it\'s...", "Hmm... is it",
+    //                       "My friend WolframAlpha says it\'s ",
+    //                       "My calculations say the answer is: ",
+    //                       "Ask your professor, my guess is ",
+    //                       "You can\'t do that yourself? lol It\'s ",
+    //                       "Oh, that\'s easy! It\'s "];
+    //           randomNumber = Math.floor(Math.random()*response.length);
+    //           postMessage(response[randomNumber]+ "\n" + answer);
+    //         }
+    //       } else {
+    //         answer = "I can't calculate that...";
+    //       }
+    //     }
+    // });
     }
     if (weatherRegex.test(request.text)) {
       Regexnow = /\b(now|current)\b/i; Regextoday = /\b(today|day)\b/i;
@@ -418,11 +436,33 @@ function respond() {
       });
       this.res.end();
 
-    } if (request.text == "/quote" || request.text == "/quote ") {
+    } if (botRegex_quote.test(request.text)) {
       this.res.writeHead(200);
       likeMessage(request.id);
-      randomNumber = Math.floor(Math.random()*quotes.length);
-      postMessage(quotes[randomNumber]);
+
+      if (!botRegex_oneword.test(request.text)) {                  //If it's just "/quote"
+        randomNumber = Math.floor(Math.random()*quotes.length);
+        postMessage(quotes[randomNumber]);
+      } else {
+        findQuote = request.text; findQuote = findQuote.replace(/[\/]quote /i,'');
+        botRegex_findQuote = new RegExp("\\b" + findQuote + "\\b","i");
+        newQuotes = [];
+        for(i = 0; i < quotes.length; i++){                       //If a quote matches the search term, add it to a new list
+          if(botRegex_findQuote.test(quotes[i])){
+            newQuotes.push(quotes[i]);
+          }
+        }
+        if(newQuotes.length > 0) {
+          console.log("Found " + newQuotes.length + " matching quotes...");
+          randomNumber2 = Math.floor(Math.random()*newQuotes.length);
+          postMessage(newQuotes[randomNumber2]);
+        } else {
+          console.log("Couldn't find any matching quotes...");      // If a quote wasn't found, procede as normal.
+          randomNumber = Math.floor(Math.random()*quotes.length);
+          postMessage(quotes[randomNumber]);
+        }
+
+      }
       this.res.end();
     }
      else {
