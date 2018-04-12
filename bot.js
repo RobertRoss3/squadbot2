@@ -478,7 +478,7 @@ function respond() {
                       "How about ", "The spirits tell me ", "I feel like I should say ", "Well, " + userName + ", I'm gonna say ", "I'm legally required to say "];
 
         response2 = [ "yes","most likely, if you're not an idiot","definitely yes","yeah","it is certain","yussssss","absolutely","yes, but only if Sara says it's okay",
-                      "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes.","yes... I think.",
+                      "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes","yes... I think",
                       "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah",
                       "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
                       "fuck no","no","absolutely not","noooooooooooo","yes! jk, no"];
