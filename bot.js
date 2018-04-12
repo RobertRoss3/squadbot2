@@ -475,9 +475,6 @@ function respond() {
       likeMessage(request.id);
       if(botRegex_oneword.test(request.text)){
 	names = ["Sara", "Lauren", "Amy", "Elias", "your mom", "your neighbor", "your conscience"];
-	      
-	randomNumber1 = Math.floor(Math.random()*response1.length);
-        randomNumber2 = Math.floor(Math.random()*response2.length);
 	randomNumber3 = Math.floor(Math.random()*names.length);
 	      
         response1 = ["My sources say ","Hmm... I'm gonna go with ", "Um... ", "Dude, ", "I think we both know the answer is ", "Let's just say ",
@@ -489,6 +486,9 @@ function respond() {
                  "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
                  "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah"
                  ];
+	      
+	randomNumber1 = Math.floor(Math.random()*response1.length);
+        randomNumber2 = Math.floor(Math.random()*response2.length);
 
         response = "🎱 " + response1[randomNumber1] + response2[randomNumber2]  + ".";
         postMessage(response);
