@@ -72,9 +72,10 @@ function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       quotes = [
       "\"Headed to Lakeside\" - Elias Delvasto", "\"This man John is fucking dead, you gotta use a Ouija board to talk to him now.\" - Robert Ross",
-      "\"I will hit all you cheating fools with chairs including you Kalan, and Elias you’ll get an entire sofa.\" - Sara Cowan",
-      "\"I'm gonna spoon Bestie hard as shit tonight.\" - Matt Potter", "\"If your ass smells as good as you do, I'd eat it.\" - Marco Navarro",
-      "\"Man of my medical bill was 4 billion dollars, they better be able to regenerate me with only my eyeball left.\" - David Potters", "\"I wish I knew how to read.\" - Connor O’Neill",
+      "\"IMA HIT ON ALL THE DUDES\" - Nathan Munns", "\"I actually lost my virginity to a hooker.\" - Marco Navarro", "\"Damn Carley is getting a boob job? I wish i could get a dick job.\" -Marco Novarro", "\"I wanna see Kyle fuck a stripper at my bachelor party.\" - Kalan McNeese",
+      "\"I will hit all you cheating fools with chairs including you Kalan, and Elias you’ll get an entire sofa.\" - Sara Cowan", "\"Matt Potter: Robert, you’re going to smash and break everything on this table. \nRobert: I know what I’m going to smash tonight *stares and smiles at Betsie*\" - Robert Ross",
+      "\"I'm gonna spoon Betsie hard as shit tonight.\" - Matt Potter", "\"If your ass smells as good as you do, I'd eat it.\" - Marco Navarro",
+      "\"Man if my medical bill was 4 billion dollars, they better be able to regenerate me with only my eyeball left.\" - David Potters", "\"I wish I knew how to read.\" - Connor O’Neill",
       "\"It needs to be an explicit, ‘fuck me hard daddy’ or else it’s rape.\" - Matt Potter", "\"I’m tired of david’s ugly ass pictures always looking like a whole dumbass 24/7 but what can I expect, he drinks hot dog water.\" - Kalan McNeese",
       "\"Fuck money bruh, who needs that shit anyway?\" - John Stagg","\"OH MAH GOD\" - David Potters","\"Kylo Ren please don’t take my cheeks\" - David Potters",
       "\"Is it wrong for a man to get a boner when he is getting hit in the face?\" - Caleb O’Neill","\"Brock Turner can still get hired to be a gynecologist\" - Robert Ross","\"Robert fuck you, always talking shit about my hair\" - John Stagg","\"I once bought a $1200 dog for a girl to have us break up a month later\" - Nathan Munns",
