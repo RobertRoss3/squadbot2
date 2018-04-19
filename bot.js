@@ -142,7 +142,7 @@ function respond() {
       botRegex_bot = /@Squadbot.*?/i;
       tagRegex_mealplan = /@(food|meal plan|mealplan)/i;
       tagRegex_engineers = /@engineers/i;
-      tagRegex_forum = /@forum/i;
+      tagRegex_forum = /@(forum|hudson)/i;
       tagRegex_oneeleven = /@(111|911)/i;
       tagRegex_GSU = /@(GSU|southern)/i;
       tagRegex_girls = /@(girls|ladies|women)/i;
@@ -249,10 +249,10 @@ function respond() {
         } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
       });
       if(tagRegex_forum.test(request.text)){
-        response = ["Forum boys, ",
-                    "Peeps who live at the Forum, ",
-                    "Forum residents, ",
-                    "Hey Forum, "];
+        response = ["Hudson boys, ",
+                    "Peeps who live at the Hudson, ",
+                    "Hudson residents, ",
+                    "Hey Hudson, "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber]
       } else if (tagRegex_oneeleven.test(request.text)) {
@@ -585,9 +585,9 @@ function respond() {
       forum1831Regex = /^(?=.*\bForum\b)(?=.*\b1831\b).*$/im;
       rm111roomRegex = /^(?=.*\b(111|911)\b)(?=.*\bSouth\b).*$/;
       if (forum1831Regex.test(request.text)) {
-        postMessage("The code for The Forum 1831 is: \n 939b79bb13efa6ebedd9")
+        postMessage("The code for The Hudson 1831 is: \n 939b79bb13efa6ebedd9")
       } else if (forum1415Regex.test(request.text)) {
-        postMessage("The code for the Forum 1415 is: \n E483996D5FEA")
+        postMessage("The code for the Hudson 1415 is: \n E483996D5FEA")
       } else if (rm111roomRegex.test(request.text)) {
         postMessage("The code for 911 South is: \n Unknown. You'll have to be there.");
       } else {
@@ -603,7 +603,13 @@ function respond() {
       if (cleverQuestion) {
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist") {
-            postMessage("I have nothing to say to that...");
+		newresponse = ["I have nothing to say to that...",
+		"I've lost my voice at the moment, try again later.",
+		"I can't talk right now.",
+		"My AI module has failed.", "I'm mute for the time being..."];
+		randomNumber = Math.floor(Math.random()*newresponse.length);
+		newresponse = newresponse[randomNumber];
+            postMessage("");
           } else {
             likeMessage(request.id);
             postMessage(response);
