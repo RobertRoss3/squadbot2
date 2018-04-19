@@ -27,7 +27,7 @@ var cleverKey = process.env.CLEVER_KEY;
     randomNumber = randomNumber = Math.floor(Math.random()*999);
     session = 'Squadbot1'+randomNumber;
     console.log("Loading Cleverbot AI session: " + session + "...")
-    cleverBot.setNick(session);+
+    cleverBot.setNick(session);
     cleverBot.create(function (err, session) {
     });
     console.log("Cleverbot loading completed...")
