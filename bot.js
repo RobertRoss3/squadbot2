@@ -71,7 +71,7 @@ function delay(time) {
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       quotes = [
-      "\"Matt P: Dalvin take the pot you won the hand. \nDalvin: Nah it ain't nothing but about 1500.\" - Dalvin Andrews",
+      "\"Matt P: Dalvin take the pot you won the hand. \nDalvin: Nah it ain't nothing but about 1500.\" - Dalvin Andrews", "\"I just need a couple more shots.\" - Matt Potter", "\"I really just wanna get knocked up by ryan reynolds rn. \nKnocked *OUT \nFuck!\" - Austin Boyd", "\"Anyway.. im gonn go to bed before i make poor life decisions and end up like my children\" - Austin Boyd",
       "\"Headed to Lakeside\" - Elias Delvasto", "\"This man John is fucking dead, you gotta use a Ouija board to talk to him now.\" - Robert Ross",
       "\"IMA HIT ON ALL THE DUDES\" - Nathan Munns", "\"I actually lost my virginity to a hooker.\" - Marco Navarro", "\"Damn Carley is getting a boob job? I wish i could get a dick job.\" -Marco Novarro", "\"I wanna see Kyle fuck a stripper at my bachelor party.\" - Kalan McNeese",
       "\"I will hit all you cheating fools with chairs including you Kalan, and Elias you’ll get an entire sofa.\" - Sara Cowan", "\"Matt Potter: Robert, you’re going to smash and break everything on this table. \nRobert: I know what I’m going to smash tonight *stares and smiles at Betsie*\" - Robert Ross",
