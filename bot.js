@@ -158,6 +158,7 @@ function respond() {
       Chad	= '24474608'; Tori	= '18922923'; Cayte	=	'43573131';
       Austin = '51259439'; John = '25140874'; Kyle = '53552393' ;
       Lauren = '8351131'; Amy = '28852419'; Phina = '56225693'; Dakota = '00000000';
+      Alexis = '00000000'; Meagan = '00000000'; Kelly = '00000000';
 
       // INFO ABOUT THE USER THAT TRIGGERED THE BOT
       userName = request.name; userIDNum = request.user_id;
@@ -231,10 +232,10 @@ function respond() {
     mealPlan = [David, Kalan, Elias, Austin, John, Kyle];
     Engineers = [Connor, Dalvin, Nathan, Robert];
     Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
-    OneEleven = [Connor, Elias, Nathan, Caleb];
-    AtGSU = [Connor, Elias, White_Matt, Caleb, Dalvin, David, Kalan, Nathan, Black_Matt, Marco, John, Austin, Kyle, Robert, Lauren];
+    OneEleven = [Connor, Elias, Nathan, Caleb, Lauren];
+    AtGSU = [Dalvin, David, Kalan, Black_Matt, Marco, John];
     Guys = [Kalan, Austin, White_Matt, Caleb, Nathan, Connor, Robert, Kyle, Dakota, Elias, Dalvin, Marco, John, David];
-    Girls = [Amy, Lauren, Sara, Phina, Brittany, Tori];
+    Girls = [Amy, Lauren, Sara, Phina, Brittany, Tori, Alexis, Meagan, Kelly];
     ExcludeFromAll = [];
     if (request.user_id == '') {postMessage("???");}
     // If someone posts @all
