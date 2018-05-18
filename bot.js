@@ -2,18 +2,22 @@ var HTTPS = require('https');
 var HTTP = require('http');
 var API = require('groupme').Stateless;
 var PROMISE = require('es6-promise').polyfill();
-var pg = require('pg');
 var cool = require('cool-ascii-faces');
 var index = require('./index.js');
 var cleverbot = require('cleverbot.io');
 var Forecast = require('forecast');
 var DOMParser = require('xmldom').DOMParser;
-var Client = require('node-wolfram');
+var wolfClient = require('node-wolfram');
 var ImageService = require('groupme').ImageService;
 var Guid = require('guid');
 
 console.log("Starting up...");
 
+//    DATABASE INFORMATION
+var pg = require('pg');                             // Include the dependency
+var connectionString = process.env.DATABASE_URL;    // Provide connection string for the postgreSQL client
+var pgClient = new pg.Client(connectionString);     // Instantiate the client for postgres database
+pgClient.connect();                                 // Connect to database
 
 //     API KEYS FOR ALL APIS USED
 var botID = process.env.BOT_ID;
@@ -34,7 +38,7 @@ var cleverKey = process.env.CLEVER_KEY;
 
 var weatherKey = process.env.WEATHER_KEY;
 var mathKey = process.env.MATH_KEY;
-    Wolfram = new Client(mathKey);
+    Wolfram = new wolfClient(mathKey);
 
 console.log("Loading weather API...")
 var forecast = new Forecast({
@@ -56,7 +60,6 @@ API.Groups.show(accessToken, groupID, function(err,ret) {
   } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
 });
 
-var passwords = [['Forum 1415','12345679']];
 var refresh = (new Date().getTime() / 1000) - 120;
 
 // time arg is in milliseconds
@@ -139,11 +142,11 @@ function respond() {
       botRegex_quote = /^([\/]quote)/i;
       botRegex_8ball = /^([\/]8ball)/i;
 
-      botRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i;
-      botRegex_bot = /@Squadbot.*?/i;
+      tagRegex_all = /@(all|squad\b|anyone|everyone|everybody)/i;
+      tagRegex_bot = /@Squadbot.*?/i;
       tagRegex_mealplan = /@(food|meal plan|mealplan)/i;
       tagRegex_engineers = /@engineers/i;
-      tagRegex_forum = /@(forum|hudson)/i;
+      tagRegex_hudson = /@(forum|hudson)/i;
       tagRegex_oneeleven = /@(111|911)/i;
       tagRegex_GSU = /@(GSU|southern)/i;
       tagRegex_girls = /@(girls|ladies|women)/i;
@@ -189,7 +192,7 @@ function respond() {
       likeMessage(request.id);
       postMessage("- Kendrick Lamar");
     }
-    if (botRegex_bot.test(request.text)) {
+    if (tagRegex_bot.test(request.text)) {
       likeMessage(request.id);
       response = ["What?","What is it?", "?",
                   "Yes?", "I'm awake!", "How can I help?", "Huh?","You called?"];
@@ -217,8 +220,8 @@ function respond() {
   if(request.text
     && request.user_id != '43525551'
     && request.sender_type != "bot"
-    && (botRegex_all.test(request.text)
-      || tagRegex_forum.test(request.text)
+    && (tagRegex_all.test(request.text)
+      || tagRegex_hudson.test(request.text)
       || tagRegex_oneeleven.test(request.text)
       || tagRegex_mealplan.test(request.text)
       || tagRegex_engineers.test(request.text)
@@ -231,7 +234,7 @@ function respond() {
 
     mealPlan = [David, Kalan, Elias, Austin, John, Kyle];
     Engineers = [Connor, Dalvin, Nathan, Robert];
-    Forum = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
+    Hudson = [White_Matt, Dalvin, David, Kalan, Robert, Black_Matt, Marco, Kyle, John];
     OneEleven = [Connor, Elias, Nathan, Caleb, Lauren];
     AtGSU = [Dalvin, David, Kalan, Black_Matt, Marco, John];
     Guys = [Kalan, Austin, White_Matt, Caleb, Nathan, Connor, Robert, Kyle, Dakota, Elias, Dalvin, Marco, John, David];
@@ -250,7 +253,7 @@ function respond() {
           console.log("NUMBER OF MEMBERS: " + members.length);
         } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
       });
-      if(tagRegex_forum.test(request.text)){
+      if(tagRegex_hudson.test(request.text)){
         response = ["Hudson boys, ",
                     "Peeps who live at the Hudson, ",
                     "Hudson residents, ",
@@ -260,10 +263,10 @@ function respond() {
       } else if (tagRegex_oneeleven.test(request.text)) {
         response = '111 crew, ';
       } else if (tagRegex_mealplan.test(request.text)) {
-        response = ["Food people, ", "Humans whomst eat food, ",
+        response = ["Food people, ",
                     "Anyone with a meal plan, ",
                     "Landy squad, ", "Lakeside crew, ",
-                    "Those who would like to eat, ", "🍔: "];
+                    "🍔: "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
       } else if (tagRegex_girls.test(request.text)) {
@@ -285,8 +288,8 @@ function respond() {
       } else if (tagRegex_GSU.test(request.text)) {
         response = ["Everyone in Statesboro, ",
                     "Hey everybody at GSU, ",
-                    "LISTEN UP, ",
-                    "All humans in Statesboro, ",
+                    "LISTEN UP GSU, ",
+                    "Statesboro, ",
                     "Those in the GSU area, ", "EAGLES: "];
         randomNumber = Math.floor(Math.random()*response.length);
         response = response[randomNumber];
@@ -315,13 +318,13 @@ function respond() {
       for (i=0; i < members.length; i++){
         if(request.user_id != '43525551') {
           if((tagRegex_oneeleven.test(request.text) && OneEleven.indexOf(members[i].user_id) > -1)
-            || (tagRegex_forum.test(request.text) && Forum.indexOf(members[i].user_id) > -1)
+            || (tagRegex_hudson.test(request.text) && Hudson.indexOf(members[i].user_id) > -1)
             || (tagRegex_mealplan.test(request.text) && mealPlan.indexOf(members[i].user_id) > -1)
             || (tagRegex_engineers.test(request.text) && Engineers.indexOf(members[i].user_id) > -1)
             || (tagRegex_GSU.test(request.text) && AtGSU.indexOf(members[i].user_id) > -1)
             || (tagRegex_guys.test(request.text) && Guys.indexOf(members[i].user_id) > -1)
             || (tagRegex_girls.test(request.text) && Girls.indexOf(members[i].user_id) > -1)
-            || (botRegex_all.test(request.text) && ExcludeFromAll.indexOf(members[i].user_id) == -1))
+            || (tagRegex_all.test(request.text) && ExcludeFromAll.indexOf(members[i].user_id) == -1))
             {
             usersID[i] = members[i].user_id;
             usersLoci[i] = [0,reslength-2];
@@ -481,17 +484,17 @@ function respond() {
       if(botRegex_oneword.test(request.text)){
 	names = ["Sara", "Lauren", "Amy", "Elias", "your mom", "your neighbor", "your conscience"];
 	randomNumber3 = Math.floor(Math.random()*names.length);
-	      
+
         response1 = ["My sources say ","Hmm... I'm gonna go with ", "Um... ", "Dude, ", "I think we both know the answer is ", "Let's just say ",
                       "How about ", "The spirits tell me ", "I feel like I should say ", "Well, " + userName + ", I'm gonna say ", "I'm legally required to say "];
 
-        response2 = [ 
+        response2 = [
                 "fuck no","no","absolutely not","noooooooooooo","yes! jk, no", "yes","most likely, if you're not an idiot","definitely yes","yeah","it is certain","yussssss","absolutely","yes, but only if " + names[randomNumber3] + " says it's okay",
                  "without a doubt","yes, and make sure to hydrate","yes, 100%","totally","most likely","yeah, but wait a day","no. Wait nvm yes","yes... I think",
                  "I don't know","ask again later","I can't predict right now","think real hard first, then ask again","it's better not to tell you right now",
                  "there's a good chance","a unanimous yes","ye probs","yeah nah nah yeah"
                  ];
-	      
+
 	randomNumber1 = Math.floor(Math.random()*response1.length);
         randomNumber2 = Math.floor(Math.random()*response2.length);
 
@@ -552,7 +555,7 @@ function respond() {
     randomNumber = Math.floor(Math.random()*response.length);
     postMessage(response[randomNumber]);
     this.res.end();
-  } if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && botRegex_bot.test(request.text)) {
+  } if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && tagRegex_bot.test(request.text)) {
       if(botRegex_hi.test(request.text) || botRegex_morning.test(request.text)) {
       this.res.writeHead(200);
       Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine " + sayDay + "?", "😜", "Yo."];
@@ -583,12 +586,12 @@ function respond() {
       this.res.end();
     } else if (wifiRegex.test(request.text)) {
       this.res.writeHead(200);
-      forum1415Regex = /^(?=.*\bForum\b)(?=.*\b1415\b).*$/im;
-      forum1831Regex = /^(?=.*\bForum\b)(?=.*\b1831\b).*$/im;
+      hudson1415Regex = /^(?=.*\bHudson\b)(?=.*\b1415\b).*$/im;
+      hudson1831Regex = /^(?=.*\bHudson\b)(?=.*\b1831\b).*$/im;
       rm111roomRegex = /^(?=.*\b(111|911)\b)(?=.*\bSouth\b).*$/;
-      if (forum1831Regex.test(request.text)) {
+      if (hudson1831Regex.test(request.text)) {
         postMessage("The code for The Hudson 1831 is: \n 939b79bb13efa6ebedd9")
-      } else if (forum1415Regex.test(request.text)) {
+      } else if (hudson1415Regex.test(request.text)) {
         postMessage("The code for the Hudson 1415 is: \n E483996D5FEA")
       } else if (rm111roomRegex.test(request.text)) {
         postMessage("The code for 911 South is: \n Unknown. You'll have to be there.");
