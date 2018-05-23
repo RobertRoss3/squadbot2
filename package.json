@@ -1,6 +1,6 @@
 {
   "name": "Squadbot",
-  "version": "0.1.2",
+  "version": "0.2.3",
   "description": "A Cool Bot For Squad",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,8 @@
     "director": "^1.2.8",
     "es6-promise": "^4.2.4",
     "forecast": "^0.3.0",
+    "google-spreadsheet": "^2.0.4",
+    "googleapis": "^27.0.0",
     "groupme": "^0.5.7",
     "guid": "0.0.12",
     "node-wolfram": "0.0.1",
