@@ -69,6 +69,7 @@ async.series([
           Member_name[i] = cells[(i*2)+1].value;
           Member[i] = [Member_id[i], Member_name[i]];
       }
+      Member_id.push('43525551'); Member_name.push('SquadBot'); Member.push(['43525551','Squadbot']);
       step();
     });
   },
@@ -210,8 +211,6 @@ function respond() {
   console.log(userName + " (" + userIDNum + ") POSTED: " + this.req.chunks[0]);
   askme = false;
 
-
-
   if(request.text && !botRegex_oneword.test(request.text)) {
     this.res.writeHead(200);
     if (/damn\b/gi.test(request.text)) {
@@ -339,6 +338,38 @@ function respond() {
       this.res.writeHead(200);
       likeMessage(request.id);
       searchGiphy(request.text.substring(7));
+    }
+    if(/^([\/](whois|who is))/i.test(request.text)) {
+      this.res.writeHead(200);
+      attachments = request.attachments[0];
+      if(attachments != null){
+        if(attachments.type == 'mentions'){
+          response = "";
+          UserIDs = attachments.user_ids;
+          likeMessage(request.id);
+          for(id=0;id<UserIDs.length;id++){
+            if(Member_id.includes(attachments.user_ids[id])){
+              thisName = Member_name[Member_id.indexOf(attachments.user_ids[id])];
+            } else {
+              thisName = "";
+            }
+            stringstart = attachments.loci[id][0]+1; stringend = stringstart+attachments.loci[id][1]-1;
+            response += request.text.substring(stringstart,stringend);
+            response += " has the ID "+attachments.user_ids[id]+" and is ";
+            if(thisName){
+                response += "listed as \""+thisName+"\".";
+            } else {
+                response += "not listed."
+            }
+            response += '\n';
+          }
+          postMessage(response);
+        } else {
+          postMessage("You have to tag someone.");
+        }
+      } else {
+        postMessage("You have to tag someone.");
+      }
     }
     if (/^\/\b(math|calc|wolf)\b/i.test(request.text)) {
       // getMath(request.text.substring(5));
@@ -729,14 +760,14 @@ function postMessage(botResponse,type,args) {
   };
   API.Messages.create(accessToken,groupID,options, function(err,res){
     if (!err) {
-    } else {console.log('POSTING FAILED: ERROR ' + JSON.stringify(err));}
+    } else {console.log('POSTING FAILED: ERROR ' + err);}
   });
 };
 
 function likeMessage(messageID) {
   API.Likes.create(accessToken,groupID,messageID, function(err,res) {
     if (!err) {
-    } else {console.log('LIKING FAILED: ERROR ' + JSON.stringify(err));}
+    } else {console.log('LIKING FAILED: ERROR ' + err);}
   });
 };
 
