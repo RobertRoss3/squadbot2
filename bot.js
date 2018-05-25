@@ -96,7 +96,7 @@ async.series([
     });
   },
   function getQuotes(step){
-    Quotes_info.getCells({'min-row': 1,'max-row': 300,'min-col': 1,'max-col': 1,'return-empty': false},
+    Quotes_info.getCells({'min-row': 2,'max-row': 300,'min-col': 1,'max-col': 1,'return-empty': false},
     function(err, cells){
       quotecount = cells.length;
       console.log("Counted "+quotecount+" quotes...");
