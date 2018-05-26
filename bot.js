@@ -31,6 +31,7 @@ async.series([
   function getInfoAndWorksheets(step) {
     doc.getInfo(function(err, info) {
       if (info != null){
+        //Loads document info and creates arrays that will be used for tagging and quoting
         console.log('Loaded document: '+info.title+'... ');
         Members_info = info.worksheets[0]; Groups_info = info.worksheets[1]; Quotes_info = info.worksheets[2];
         console.log('Sheet 1: \''+Members_info.title+'\' (ID: '+Members_info.id+'), Sheet 2: \''+Groups_info.title+'\' (ID: '+Groups_info.id+')...');
@@ -95,6 +96,7 @@ async.series([
       step();
     });
   },
+  //  GETS QUOTES
   function getQuotes(step){
     Quotes_info.getCells({'min-row': 2,'max-row': 300,'min-col': 1,'max-col': 1,'return-empty': false},
     function(err, cells){
@@ -194,7 +196,7 @@ last_response = " ";
 function respond() {
   var request = JSON.parse(this.req.chunks[0]);
 
-  botInfo = "Hi, I'm SquadBot version 2.3! \n" +
+  botInfo = "Hi, I'm SquadBot version 2.4.2! \n" +
             "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
             "Use /weather [now][today][this week] to get the weather for those times. \n" +
             "Use /math [problem] to solve math problems with WolframAlpha. \n" +
@@ -247,6 +249,34 @@ function respond() {
     postMessage("tock");
     likeMessage(request.id);
     this.res.end();
+  }
+  if(/^BULLSHIT ALERT/i.test(request.text)){
+    var newtime = new Date().getTime() / 1000;
+    if (newtime < refresh + 10) {
+      response = ["You\'re doing that too much...",
+                  "Cool it, cowboy. ",
+                  "Wait a minute please...",
+                  "Give me a sec.",
+                  "lol nah dude",
+                  "Not right now.",
+                  "😤"];
+      randomNumber = Math.floor(Math.random()*response.length);
+      response = response[randomNumber];
+      postMessage(response);
+    } else {
+      response1 = ["Woah... ","Uh, ","Aight so ","OOOOOOOOOOOKAY ","😑 ","😶 ","😲 ","😱 ",'Nephew...'];
+      randomNumber = Math.floor(Math.random()*response1.length);
+      response = response1[randomNumber];
+      response += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+      response += "Looks like there's some fucked up shit up there! Here's a gif of ";
+      topic = ['cat','duck','trippy','puppy','baby'];
+      response2 = ['a cat!','a duck.','something trippy','puppies','a baby'];
+      randomNumber2 = Math.floor(Math.random()*topic.length);
+      response += response2[randomNumber2];
+      postMessage(response);
+      searchGiphy(topic[randomNumber2]);
+      refresh = newtime;
+    }
   }
   tagtest = false;
   for (i=0;i<groupcount;i++){
@@ -342,7 +372,7 @@ function respond() {
     if(/^([\/](whois|who is))/i.test(request.text)) {
       this.res.writeHead(200);
       attachments = request.attachments[0];
-      if(attachments != null){
+      if(attachments){
         if(attachments.type == 'mentions'){
           response = "";
           UserIDs = attachments.user_ids;
@@ -486,7 +516,6 @@ function respond() {
           randomNumber = Math.floor(Math.random()*Quotes.length);
           postMessage(quotes[randomNumber].replace(/\\n/g,'\n'));
         }
-
       }
       this.res.end();
     } if (/^([\/]8ball)/i.test(request.text)){
@@ -681,7 +710,10 @@ function searchGiphy(giphyToSearch) {
       if (!(str && JSON.parse(str))) {
         postMessage('Couldn\'t find a gif...');
       } else {
-        var id = JSON.parse(str).data[0].id;
+        gifs = JSON.parse(str).data;
+        console.log("Available gifs: " + gifs.length);
+        randomNumber = Math.floor(Math.random()*gifs.length);
+        var id = gifs[randomNumber].id;
         var giphyURL = 'http://i.giphy.com/' + id + '.gif';
         postMessage(giphyURL);
       }
