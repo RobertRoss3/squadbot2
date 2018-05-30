@@ -514,7 +514,7 @@ function respond() {
         } else {
           console.log("Couldn't find any matching quotes...");      // If a quote wasn't found, procede as normal.
           randomNumber = Math.floor(Math.random()*Quotes.length);
-          postMessage(quotes[randomNumber].replace(/\\n/g,'\n'));
+          postMessage(Quotes[randomNumber].replace(/\\n/g,'\n'));
         }
       }
       this.res.end();
