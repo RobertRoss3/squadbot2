@@ -633,7 +633,7 @@ function respond() {
       cleverQuestion = request.text;
       cleverQuestion = cleverQuestion.replace(/@squadbot(dev|)/i,'');
       if (cleverQuestion) {
-        console.log("Contacting Cleverbot AI server with: \"" + cleverQuestion "\"");
+        console.log("Contacting Cleverbot AI server with: \"" + cleverQuestion + "\"");
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist" || response == 'Site error') {
         		newresponse = ["I have nothing to say to that...",
