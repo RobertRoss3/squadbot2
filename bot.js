@@ -34,7 +34,6 @@ async.series([
         //Loads document info and creates arrays that will be used for tagging and quoting
         console.log('Loaded document: '+info.title+'... ');
         Members_info = info.worksheets[0]; Groups_info = info.worksheets[1]; Quotes_info = info.worksheets[2];
-        console.log('Sheet 1: \''+Members_info.title+'\' (ID: '+Members_info.id+'), Sheet 2: \''+Groups_info.title+'\' (ID: '+Groups_info.id+')...');
         step();
       } else {console.log("Error: Spreadsheet returned undefined.")}
     });
@@ -49,10 +48,10 @@ async.series([
       for (i = 0; i < groupcount; i++){
         Group_name[i] = cells[i].value;
         tempRegEx = cells[i+groupcount].value;
-        tempRegEx = tempRegEx.replace(/\,/ig,'|').replace(/\s/ig,'');
+        tempRegEx = tempRegEx.replace(/\;/ig,'|').replace(/\s/ig,'');
         Group_regex[i] = new RegExp('@('+tempRegEx+')', 'i');
-        tempResponse = cells[i+groupcount*2].value; tempResponse = tempResponse.replace(/\"\,/g,'\"_');
-        Group_response[i] = tempResponse.split('_');
+        tempResponse = cells[i+groupcount*2].value;
+        Group_response[i] = tempResponse.split(';');
         Group[i] = [Group_name[i],Group_regex[i],Group_response[i], new Array()];
       }
       step();
@@ -86,12 +85,10 @@ async.series([
         }
         Group[j][3] = subGroup[j];
         for(k=0;k<Group[j][3].length;k++){
-          // if(Member_name.indexOf(Group[j][3][k])>-1){
           if(Member_name.includes(Group[j][3][k])){
             Group[j][3][k] = Member_id[Member_name.indexOf(Group[j][3][k])];
           }
         }
-        // console.log("Members of "+Group[j][0]+": "+Group[j][3]);
       }
       step();
     });
@@ -193,20 +190,21 @@ function delay(time) {
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
 
+botInfo = "Hi, I'm SquadBot version 2.4.4! \n" +
+          "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
+          "Use /weather [now][today][this week] to get the weather for those times. \n" +
+          "Use /math [problem] to solve math problems with WolframAlpha. \n" +
+          "I'll respond to certain key words and phrases and you can also @ me to chat. \n" +
+          "Use \'@mealplan\' to tag anyone with a meal plan and \'@GSU\' for anyone in the Statesboro area. \n" +
+          "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
+          "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
+
+// ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
+botRegex_oneword = /\s\b/;
+tagRegex_bot = /@Squadbot.*?/i;
+
 function respond() {
   var request = JSON.parse(this.req.chunks[0]);
-
-  botInfo = "Hi, I'm SquadBot version 2.4.2! \n" +
-            "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
-            "Use /weather [now][today][this week] to get the weather for those times. \n" +
-            "Use /math [problem] to solve math problems with WolframAlpha. \n" +
-            "I'll respond to certain key words and phrases and you can also @ me to chat. \n" +
-            "Use \'@mealplan\' to tag anyone with a meal plan and \'@GSU\' for anyone in the Statesboro area. \n" +
-            "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
-            "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
-  // ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
-  botRegex_oneword = /\s\b/;
-  tagRegex_bot = /@Squadbot.*?/i;
 
   // INFO ABOUT THE USER THAT TRIGGERED THE BOT
   userName = request.name; userIDNum = request.user_id;
@@ -274,6 +272,7 @@ function respond() {
       randomNumber2 = Math.floor(Math.random()*topic.length);
       response += response2[randomNumber2];
       postMessage(response);
+      delay(1500);
       searchGiphy(topic[randomNumber2]);
       refresh = newtime;
     }
@@ -484,6 +483,7 @@ function respond() {
         if (!err) {
           console.log("GOT GROUP MEMBERS!");
           members = ret.members;
+          postMessage("Members are listed in the log!");
           // console.log("MEMBERS: "+members.length);
           console.log("MEMBERS: "+JSON.stringify(members));
           console.log("NAMES: " + AllNames);
@@ -631,9 +631,9 @@ function respond() {
     } else if (!askme) {
       this.res.writeHead(200);
       cleverQuestion = request.text;
-      cleverQuestion = cleverQuestion.replace(/@squadbot/i,'');
-      console.log("Contacting Cleverbot AI server...");
+      cleverQuestion = cleverQuestion.replace(/@squadbot(dev|)/i,'');
       if (cleverQuestion) {
+        console.log("Contacting Cleverbot AI server with: \"" + cleverQuestion "\"");
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist" || response == 'Site error') {
         		newresponse = ["I have nothing to say to that...",
@@ -644,6 +644,13 @@ function respond() {
         		newresponse = newresponse[randomNumber];
           } else {
             likeMessage(request.id);
+            if (userIDNum=="43525551"){
+              if (last_userIDNum == "43525551"){
+                userName = seclast_userName; userIDNum = seclast_userIDNum;
+              } else {
+                userName = last_userName; userIDNum = last_userIDNum;
+              }
+            }
             response = "@"+userName+" " + response;
             postMessage(response,'tag',[[[0,userName.length+1]],[userIDNum]]);
           }
@@ -655,6 +662,8 @@ function respond() {
     this.res.writeHead(200);
     this.res.end();
   }
+  seclast_userName = last_userName; seclast_userIDNum = last_userIDNum;
+  seclast_response = last_response;
   last_userName = request.name; last_userIDNum = request.user_id;
   last_response = request.text;
 }
