@@ -190,7 +190,7 @@ function delay(time) {
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
 
-botInfo = "Hi, I'm SquadBot version 2.4.4! \n" +
+botInfo = "Hi, I'm SquadBot version 2.4.5! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
           "Use /weather [now][today][this week] to get the weather for those times. \n" +
           "Use /math [problem] to solve math problems with WolframAlpha. \n" +
@@ -204,6 +204,13 @@ botRegex_oneword = /\s\b/;
 tagRegex_bot = /@Squadbot.*?/i;
 
 function respond() {
+  if (!Groups_info){
+    delay(5000);
+    if (!groupcount){
+      delay(2000);
+    }
+  }
+
   var request = JSON.parse(this.req.chunks[0]);
 
   // INFO ABOUT THE USER THAT TRIGGERED THE BOT
@@ -801,14 +808,14 @@ function postMessage(botResponse,type,args) {
   };
   API.Messages.create(accessToken,groupID,options, function(err,res){
     if (!err) {
-    } else {console.log('POSTING FAILED: ERROR ' + err);}
+    } else {console.log('POSTING FAILED: ERROR ' + JSON.stringify(err));}
   });
 };
 
 function likeMessage(messageID) {
   API.Likes.create(accessToken,groupID,messageID, function(err,res) {
     if (!err) {
-    } else {console.log('LIKING FAILED: ERROR ' + err);}
+    } else {console.log('LIKING FAILED: ERROR ' + JSON.stringify(err));}
   });
 };
 
