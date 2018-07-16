@@ -190,7 +190,7 @@ function delay(time) {
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
 
-botInfo = "Hi, I'm SquadBot version 2.4.5! \n" +
+botInfo = "Hi, I'm SquadBot version 2.4.4! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
           "Use /weather [now][today][this week] to get the weather for those times. \n" +
           "Use /math [problem] to solve math problems with WolframAlpha. \n" +
@@ -218,6 +218,29 @@ function respond() {
   console.log(userName + " (" + userIDNum + ") POSTED: " + this.req.chunks[0]);
   askme = false;
 
+  if (userIDNum=='0'){ // System message from GroupMe
+    if(/\badded\b/i.test(request.text)){
+      response = ["Well hello there!", "ohai!", "Hola!", "Welcome to the club!", "Haven't I seen you here before?",
+       "Anotha one"];
+    } else if(/\brejoined\b/i.test(request.text)){
+      response = ["Well fancy seeing you here again.", "Hmm, back again I see...",
+       "Look what the cat dragged in!", "Welcome back I guess...", "Hey there" + userName,
+       "You're back!", "You're back! Hooray!", "Oh... you're back..."];
+    } else if(/\bleft\b/i.test(request.text)){
+      response = ["https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/giphy.gif", "https://media.giphy.com/media/O5NyCibf93upy/giphy.gif",
+       "https://media.giphy.com/media/UQaRUOLveyjNC/giphy.gif", "Oh...", "Well see you later I guess...", "😶", "Holy moly.",
+     "lmaoooooooo", "AND STAY OUT!", "Finally!"];
+    } else if(/\bremoved\b/i.test(request.text)){
+      response = ["https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/giphy.gif", "GOT DAMN", "😮","Hoooooo boy.", "DAMN", "AND STAY OUT!",
+    "Now that they're gone, let's talk mad shit."];
+    }
+
+    if(true){
+      randomNumber = Math.floor(Math.random()*response.length);
+      delay(3000);
+      postMessage(response[randomNumber]);
+    }
+  }
   if(request.text && !botRegex_oneword.test(request.text)) {
     this.res.writeHead(200);
     if (/damn\b/gi.test(request.text)) {
@@ -420,9 +443,16 @@ function respond() {
               answer = result.queryresult.pod[1].subpod[0].img[0].$.src;
               // postMessage("Look at this...");
               console.log(answer);
-              postMessage("The graph looks like this... \n" + answer);
+              response = ["The graph looks like this: ",
+                          "Look at this: ",
+                          "I drew it out for you: ",
+                          "Here's a visual aid"];
+              randomNumber = Math.floor(Math.random()*response.length);
+              postMessage(response[randomNumber]);
+              delay(1000);
+              postMessage(answer);
             } else {
-              console.log(answer);
+              console.log(result.queryresult.pod[1].subpod[0]);
               response = ["I think it\'s...", "Hmm... is it",
                           "My friend WolframAlpha says it\'s ",
                           "My calculations say the answer is: ",
@@ -460,15 +490,15 @@ function respond() {
       if (Regexnow.test(request.text)) {
         postMessage("Current weather is " + weather.currently.summary.toLowerCase() +
                     " with a temperature of " + weather.currently.temperature + "°F.");
-      } else if (Regextoday.test(request.text)) {
+      } else if (Regexweek.test(request.text)) {
+        // console.log(weather.daily);
+        postMessage("Weather this week is " + weather.daily.summary);
+      } else {
         // console.log(weather.hourly);
         hourlySummary = weather.hourly.summary.toLowerCase();
         hourlySummary = hourlySummary.substring(0,hourlySummary.length-1);
         postMessage("Weather today is " + hourlySummary +
                     " with an average temperature of " + weather.hourly.data[0].temperature + "°F.");
-      } else {
-        // console.log(weather.daily);
-        postMessage("Weather this week is " + weather.daily.summary);
       }
       likeMessage(request.id);
     });
@@ -729,9 +759,13 @@ function searchGiphy(giphyToSearch) {
         gifs = JSON.parse(str).data;
         console.log("Available gifs: " + gifs.length);
         randomNumber = Math.floor(Math.random()*gifs.length);
-        var id = gifs[randomNumber].id;
-        var giphyURL = 'http://i.giphy.com/' + id + '.gif';
-        postMessage(giphyURL);
+        if (gifs.length>0){
+          var id = gifs[randomNumber].id;
+          var giphyURL = 'http://i.giphy.com/' + id + '.gif';
+          postMessage(giphyURL);
+        } else {
+          postMessage("Couldn\'t find a gif...");
+        }
       }
     });
   };
@@ -787,7 +821,7 @@ console.log("Extra stuff okay...")
 function postMessage(botResponse,type,args) {
   var botResponse, type, args, options, body, botReq, guid;
   guid = Guid.create();
-  delay(1000);
+  delay(1500);
   if(type=='tag'){
     options = {
     'message':{
