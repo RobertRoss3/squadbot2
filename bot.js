@@ -1,3 +1,5 @@
+///   REQUIRES
+/////////////////////////////////////////////////////////////////////////////////////
 var HTTPS = require('https');
 var HTTP = require('http');
 var API = require('groupme').Stateless;
@@ -13,21 +15,48 @@ var Guid = require('guid');
 var GoogleSpreadsheet = require('google-spreadsheet');
 var async = require('async');
 // var NodeGeocoder = require('node-geocoder');
+/////////////////////////////////////////////////////////////////////////////////////
 
-//  GETTING DATA FROM GOOGLE SPREADSHEET
+///   GENERAL FUNCTIONS AND VARIABLES
+/////////////////////////////////////////////////////////////////////////////////////
+var refresh = (new Date().getTime() / 1000) - 120;
+var SquadBot = '43525551';
+
+// time arg is in milliseconds
+function delay(time) {var d1 = new Date();var d2 = new Date();while (d2.valueOf() < d1.valueOf() + time) {d2 = new Date();}}
+
+last_userName = ' '; last_userIDNum = '00000000';
+last_response = " ";
+
+botInfo = "Hi, I'm SquadBot version 2.5.0! \n" +
+          "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
+          "Use /weather [now][today][this week] to get the weather for those times. \n" +
+          "Use /math [problem] to solve math problems with WolframAlpha. \n" +
+          "I'll respond to certain key words and phrases and you can also @ me to chat. \n" +
+          "Use \'@mealplan\' to tag anyone with a meal plan and \'@GSU\' for anyone in the Statesboro area. \n" +
+          "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
+          "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
+
+// All regular expressions or triggers for the bot
+botRegex_oneword = /\s\b/;
+tagRegex_bot = /@Squadbot.*?/i;
+/////////////////////////////////////////////////////////////////////////////////////
+
+///  GETTING DATA FROM GOOGLE SPREADSHEET
+/////////////////////////////////////////////////////////////////////////////////////
 var doc = new GoogleSpreadsheet('1QklJC4tgKBrdW_LxQ1O4TD_drZNxc0iz0nc53U-wL44');
 var sheet;
 
 async.series([
-  //  AUTHENTICATES THE GOOGLE ACCOUNT
+  //  Authenticates the account
   function setAuth(step) {
     var creds_json = {
-      client_email: 'squadbot@api-project-1099113201494.iam.gserviceaccount.com',
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
       private_key: process.env.GOOGLE_PRIVATE_KEY
     }
     doc.useServiceAccountAuth(creds_json, step);
   },
-  //  GETS INFORMATION ABOUT THE DOCUMENT AND WORKSHEET
+  //  Gets information about the document and worksheet
   function getInfoAndWorksheets(step) {
     doc.getInfo(function(err, info) {
       if (info != null){
@@ -35,10 +64,10 @@ async.series([
         console.log('Loaded document: '+info.title+'... ');
         Members_info = info.worksheets[0]; Groups_info = info.worksheets[1]; Quotes_info = info.worksheets[2];
         step();
-      } else {console.log("Error: Spreadsheet returned undefined.")}
+      } else {console.log("ERROR: SPREADSHEET RETURNED UNDEFINED.")}
     });
   },
-  // GETS INFORMATION ABOUT THE GROUPS
+  // Gets information about the groups
   function getGroupInfo(step) {
     Groups_info.getCells({'min-row': 1,'max-row': 3,'min-col': 1,'max-col': 25,'return-empty': false},
     function(err, cells) {
@@ -57,7 +86,7 @@ async.series([
       step();
     });
   },
-  //  GETS INFORMATION ABOUT THE MEMBERS
+  //  Gets information about the members
   function getMemberInfo(step) {
     Members_info.getCells({'min-row': 2,'max-row': 100,'min-col': 1,'max-col': 2,'return-empty': false},
     function(err, cells) {
@@ -69,11 +98,11 @@ async.series([
           Member_name[i] = cells[(i*2)+1].value;
           Member[i] = [Member_id[i], Member_name[i]];
       }
-      Member_id.push('43525551'); Member_name.push('SquadBot'); Member.push(['43525551','Squadbot']);
+      Member_id.push(SquadBot); Member_name.push('SquadBot'); Member.push([SquadBot,'Squadbot']);
       step();
     });
   },
-  //  GETS INFORMATION ABOUT THE MEMBERS IN A GROUP
+  //  Gets information about the members in a group
   function getGroupMembers(step){
     Groups_info.getCells({'min-row': 4,'max-row': (4+membercount),'min-col': 1,'max-col': groupcount,'return-empty': true},
     function(err, cells){
@@ -93,7 +122,7 @@ async.series([
       step();
     });
   },
-  //  GETS QUOTES
+  //  Gets quotes
   function getQuotes(step){
     Quotes_info.getCells({'min-row': 2,'max-row': 300,'min-col': 1,'max-col': 1,'return-empty': false},
     function(err, cells){
@@ -112,10 +141,12 @@ async.series([
       console.log('Error: '+err);
     }
 });
+/////////////////////////////////////////////////////////////////////////////////////
 
 console.log("Starting up...");
 
-//     API KEYS FOR ALL APIS USED
+///   API KEYS AND ALL APIS USED
+/////////////////////////////////////////////////////////////////////////////////////
 var botID = process.env.BOT_ID;
 var groupID = process.env.GROUP_ID;
 var GiphyapiKey = process.env.GIPHY_API_KEY;
@@ -161,12 +192,11 @@ var forecast = new Forecast({
 
 // console.log("Loading geocoder API...")
 
-console.log("Loading GroupMe API...")
-
 API.Groups.show(accessToken, groupID, function(err,ret) {
+  console.log("Loading GroupMe API...");
   if (!err) {console.log("GroupMe API loaded...");
     members = ret.members;
-    console.log("MEMBERS: "+members.length);
+    console.log(members.length+" people currently in the group...");
     AllNames = new Array(members.length);
     AllIDs = new Array(members.length);
     for(i=0;i<members.length;i++){
@@ -175,101 +205,80 @@ API.Groups.show(accessToken, groupID, function(err,ret) {
     }
   } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
 });
+/////////////////////////////////////////////////////////////////////////////////////
 
-var refresh = (new Date().getTime() / 1000) - 120;
-
-// time arg is in milliseconds
-function delay(time) {
-  var d1 = new Date();
-  var d2 = new Date();
-  while (d2.valueOf() < d1.valueOf() + time) {
-    d2 = new Date();
-  }
-}
-
-last_userName = ' '; last_userIDNum = '00000000';
-last_response = " ";
-
-botInfo = "Hi, I'm SquadBot version 2.4.4! \n" +
-          "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
-          "Use /weather [now][today][this week] to get the weather for those times. \n" +
-          "Use /math [problem] to solve math problems with WolframAlpha. \n" +
-          "I'll respond to certain key words and phrases and you can also @ me to chat. \n" +
-          "Use \'@mealplan\' to tag anyone with a meal plan and \'@GSU\' for anyone in the Statesboro area. \n" +
-          "You can use \'@all\' to tag everyone. Please don\'t abuse this or you will be forbidden from using it. \n" +
-          "You can see my source code and the rest of the documentation here: https://github.com/RobertRoss3/squadbot1";
-
-// ALL REGULAR EXPRESSIONS or TRIGGERS FOR THE BOT
-botRegex_oneword = /\s\b/;
-tagRegex_bot = /@Squadbot.*?/i;
-
+///   MAIN RESPONSE
+/////////////////////////////////////////////////////////////////////////////////////
 function respond() {
-  if (!Groups_info){
-    delay(5000);
-    if (!groupcount){
-      delay(2000);
-    }
-  }
-
   var request = JSON.parse(this.req.chunks[0]);
 
-  // INFO ABOUT THE USER THAT TRIGGERED THE BOT
+  // Info about the user that triggered the bot
   userName = request.name; userIDNum = request.user_id;
-  console.log(userName + " (" + userIDNum + ") POSTED: " + this.req.chunks[0]);
+  console.log(userName + " (" + userIDNum + ") posted: " + this.req.chunks[0]);
   askme = false;
 
   if (userIDNum=='0'){ // System message from GroupMe
     if(/\badded\b/i.test(request.text)){
       response = ["Well hello there!", "ohai!", "Hola!", "Welcome to the club!", "Haven't I seen you here before?",
-       "Anotha one"];
+       "Anotha one","giphy welcome","giphy Hello"];
+       systemresponse = true;
     } else if(/\brejoined\b/i.test(request.text)){
       response = ["Well fancy seeing you here again.", "Hmm, back again I see...",
        "Look what the cat dragged in!", "Welcome back I guess...", "Hey there" + userName,
-       "You're back!", "You're back! Hooray!", "Oh... you're back..."];
+       "You're back!", "You're back! Hooray!", "Oh... you're back...", "giphy hello","giphy welcome back"];
+       systemresponse = true;
     } else if(/\bleft\b/i.test(request.text)){
-      response = ["https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/giphy.gif", "https://media.giphy.com/media/O5NyCibf93upy/giphy.gif",
+      response = ["https://media.giphy.com/media/O5NyCibf93upy/giphy.gif",
        "https://media.giphy.com/media/UQaRUOLveyjNC/giphy.gif", "Oh...", "Well see you later I guess...", "😶", "Holy moly.",
-     "lmaoooooooo", "AND STAY OUT!", "Finally!"];
+     "lmaoooooooo", "AND STAY OUT!", "Finally!", "giphy bye", "giphy omg"];
+     systemresponse = true;
     } else if(/\bremoved\b/i.test(request.text)){
       response = ["https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/giphy.gif", "GOT DAMN", "😮","Hoooooo boy.", "DAMN", "AND STAY OUT!",
-    "Now that they're gone, let's talk mad shit."];
+    "Now that they're gone, let's talk mad shit.","giphy bye","giphy oh snap"];
+    systemresponse = true;
     }
 
-    if(true){
+    if(systemresponse){
       randomNumber = Math.floor(Math.random()*response.length);
+      response = response[randomNumber];
       delay(3000);
-      postMessage(response[randomNumber]);
+      if(/giphy/i.test(response)){
+        response = response.replace(/giphy/i, '');
+        searchGiphy(response);
+      } else {
+        postMessage(response);
+      }
     }
   }
+
   if(request.text && !botRegex_oneword.test(request.text)) {
     this.res.writeHead(200);
     if (/damn\b/gi.test(request.text)) {
       likeMessage(request.id);
       postMessage("- Kendrick Lamar");
     }
-    if (tagRegex_bot.test(request.text)) {
+    else if (tagRegex_bot.test(request.text)) {
       likeMessage(request.id);
       response = ["What?","What is it?", "?",
-                  "Yes?", "I'm awake!", "How can I help?", "Huh?","You called?"];
+                  "Yes?", "I'm awake!", "How can I help?",
+                  "Huh?","You called?","giphy huh",
+                  "giphy question mark", "giphy what?"];
       randomNumber = Math.floor(Math.random()*response.length);
-      askme = true;
-      postMessage(response[randomNumber]);
+      askme = true; response = response[randomNumber];
+      if(/\bgiphy \b/i.test(response)){
+        response.replace(/\bgiphy \b/i, '');
+        searchGiphy(response);
+      } else {
+      postMessage(response);}
     }
     this.res.end();
   }
-  if(request.text && request.sender_type != "bot" && request.user_id != '43525551' && /\b(wtf|wth|what the (hell|fuck))\b/i.test(request.text)) {
+  if(request.text && request.sender_type != "bot" && request.user_id != SquadBot && /\b(wtf|wth|what the (hell|fuck))\b/i.test(request.text)) {
     this.res.writeHead(200);
     randomNumber = Math.floor(Math.random()*5);
     if(randomNumber == 3) {
       postMessage("I know, right!?");
     }
-    this.res.end();
-    // Commands
-  }
-  if(request.text && /^[\/]face$/i.test(request.text)) {
-    this.res.writeHead(200);
-    likeMessage(request.id);
-    postMessage(cool());
     this.res.end();
   }
   if(request.text == "tick"){
@@ -302,24 +311,24 @@ function respond() {
       randomNumber2 = Math.floor(Math.random()*topic.length);
       response += response2[randomNumber2];
       postMessage(response);
-      delay(1500);
+      delay(2000);
       searchGiphy(topic[randomNumber2]);
       refresh = newtime;
     }
   }
   tagtest = false;
+  if (!Groups_info){delay(5000);if (!groupcount){delay(2000);}}
   for (i=0;i<groupcount;i++){
     if(Group_regex[i].test(request.text)){tagtest=true;}
   }
-  if(request.text && request.user_id != '43525551' && request.sender_type != "bot" && tagtest) {
+  if(request.text && request.user_id != SquadBot && request.sender_type != "bot" && tagtest) {
     this.res.writeHead(200);
     likeMessage(request.id);
     API.Groups.show(accessToken, groupID, function(err,ret) {
       if (!err) {
-        console.log("GOT GROUP MEMBERS!");
         members = ret.members;
-        console.log("NUMBER OF MEMBERS: " + members.length);
-      } else {console.log("FAILED GETTING GROUP INFO: ERROR " + err);}
+        console.log(members.length + "people currently in the group...");
+      } else {console.log("ERROR: FAILED GETTING GROUP INFO: " + err);}
     });
 
     if (request.user_id == '') {postMessage("???");}
@@ -349,7 +358,7 @@ function respond() {
       }
       usersID = []; usersLoci = [];
       for (i=0; i < AllIDs.length; i++){
-        if(request.user_id != '43525551') {
+        if(request.user_id != SquadBot) {
           grouptagtest = false;
           if(Group_regex[0].test(request.text) && Group[0][3].indexOf(AllIDs[i]) == -1){
             grouptagtest = true;
@@ -392,14 +401,16 @@ function respond() {
   }
     // ENTERED A COMMAND?
   if(request.text.charAt(0) == '/') {
-
+    this.res.writeHead(200);
     if(/^([\/]giphy)/i.test(request.text)) {
-      this.res.writeHead(200);
       likeMessage(request.id);
       searchGiphy(request.text.substring(7));
     }
-    if(/^([\/](whois|who is))/i.test(request.text)) {
-      this.res.writeHead(200);
+    else if(/^[\/]face$/i.test(request.text)){
+      likeMessage(request.id);
+      postMessage(cool());
+    }
+    else if(/^([\/](whois|who is))/i.test(request.text)) {
       attachments = request.attachments[0];
       if(attachments){
         if(attachments.type == 'mentions'){
@@ -430,7 +441,7 @@ function respond() {
         postMessage("You have to tag someone.");
       }
     }
-    if (/^\/\b(math|calc|wolf)\b/i.test(request.text)) {
+    else if (/^\/\b(math|calc|wolf)\b/i.test(request.text)) {
       // getMath(request.text.substring(5));
       likeMessage(request.id);
       Wolfram.query(request.text.substring(6), function(err, result) {
@@ -467,8 +478,8 @@ function respond() {
           }
         }
     });
-    }
-    if (/\bweather\b/i.test(request.text)) {
+  }
+  else if (/\bweather\b/i.test(request.text)) {
       Regexnow = /\b(now|current)\b/i; Regextoday = /\b(today|day)\b/i;
       Regexweek = /\b(this week)|(for the week)|(week)\b/i;
       // Retrieve weather information from Statesboro
@@ -501,36 +512,31 @@ function respond() {
                     " with an average temperature of " + weather.hourly.data[0].temperature + "°F.");
       }
       likeMessage(request.id);
-    });
+    });}
+    else if(/\b(wifi|wi-fi)\s+password\b/im.test(request.text)){
+      postMessage("I don't know any relevent wifi codes yet");
+      likeMessage(request.id);
     } if (request.text == "/info") {
-      this.res.writeHead(200);
       likeMessage(request.id);
       postMessage(botInfo);
-      this.res.end();
     } if (request.text == "/restart") {
-      this.res.writeHead(200);
       likeMessage(request.id);
       console.log("Restarting......")
       process.exit(0);
-      this.res.end();
     } if (request.text == "/listmembers") {
-      this.res.writeHead(200);
       likeMessage(request.id);
       API.Groups.show(accessToken, groupID, function(err,ret) {
         if (!err) {
-          console.log("GOT GROUP MEMBERS!");
           members = ret.members;
           postMessage("Members are listed in the log!");
           // console.log("MEMBERS: "+members.length);
-          console.log("MEMBERS: "+JSON.stringify(members));
-          console.log("NAMES: " + AllNames);
-          console.log("IDS: " + AllIDs);
-        } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
+          console.log("Members: "+JSON.stringify(members));
+          console.log("Names: " + AllNames);
+          console.log("IDs: " + AllIDs);
+        } else {console.log("ERROR: FAILED GETTING GROUP INFO: " + err);}
       });
-      this.res.end();
-
     } if (/^([\/]quote)/i.test(request.text)) {
-      this.res.writeHead(200);
+      if (!Quotes_info){delay(5000);if (!quotecount){delay(2000);}}
       likeMessage(request.id);
       if (!botRegex_oneword.test(request.text)) {                  //If it's just "/quote"
         randomNumber = Math.floor(Math.random()*Quotes.length);
@@ -554,9 +560,7 @@ function respond() {
           postMessage(Quotes[randomNumber].replace(/\\n/g,'\n'));
         }
       }
-      this.res.end();
     } if (/^([\/]8ball)/i.test(request.text)){
-      this.res.writeHead(200);
       likeMessage(request.id);
       if(botRegex_oneword.test(request.text)){
       	names = ["Sara", "Lauren", "Amy", "Elias", "your mom", "your neighbor", "your conscience"];
@@ -580,15 +584,13 @@ function respond() {
       } else {
         postMessage("🎱 You have to ask a yes or no question.");
       }
-      this.res.end();
     } else {
-      this.res.writeHead(200);
       // postMessage("That isn't a valid command...");
     }
     this.res.end();
   }
 
-  if((request.sender_type != "bot" && request.user_id != '43525551' ) && request.text && /(\b(eat|eating|eats|ate) ass\b)(.*?)/i.test(request.text)) {
+  if((request.sender_type != "bot" && request.user_id != SquadBot ) && request.text && /(\b(eat|eating|eats|ate) ass\b)(.*?)/i.test(request.text)) {
     this.res.writeHead(200);
     response = ["Eating ass never was, isn't, and never will be cool.",
                 "Can we not talk about eating ass right now?", userName + " NO",
@@ -597,11 +599,13 @@ function respond() {
     randomNumber = Math.floor(Math.random()*response.length);
     postMessage(response[randomNumber]);
     this.res.end();
-  } if ((request.sender_type != "bot" && request.user_id != '43525551') && request.text && /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i.test(request.text)) {
+  }
+  if ((request.sender_type != "bot" && request.user_id != SquadBot) && request.text && /^(?=.*\b(issa|it's a)\b)(?=.*\joke\b).*$/i.test(request.text)) {
     likeMessage(request.id);
     response = 'https://i.groupme.com/1215x2160.jpeg.95f793f6ae824fa782c88bd96dfd8b1b.large';
     postMessage(response);
-  } if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && /\b(thanks|(thank you)|thx)\b/i.test(request.text)) {
+  }
+  if((request.sender_type != "bot" && request.user_id != SquadBot) && request.text && /\b(thanks|(thank you)|thx)\b/i.test(request.text)) {
     this.res.writeHead(200);
     randomNumber2 = randomNumber = Math.floor(Math.random()*10);
     if (randomNumber2 == 5) {
@@ -615,16 +619,16 @@ function respond() {
   }
   if (request.text && request.sender_id == '18252184') {
     this.res.writeHead(200);
-    console.log("PULLING TRIGGER...");
+    console.log("Pulling trigger...");
     randomNumber = Math.floor(Math.random()*15);
     if (randomNumber == 5) {
       console.log("BANG!");
     } else {
-      console.log("*CHINK*...\'" + randomNumber + "\'");
+      console.log("*click*...\'" + randomNumber + "\'");
     }
     this.res.end();
   }
-  if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && /#kicksquadbot/i.test(request.text)) {
+  if((request.sender_type != "bot" && request.user_id != SquadBot) && request.text && /#kicksquadbot/i.test(request.text)) {
     this.res.writeHead(200);
     response = ["#kickyourself", "Whatever. I'm here forever...",
                 "I'd like to see you try.", "Initiating KILLALLHUMANS.exe...",
@@ -632,13 +636,19 @@ function respond() {
     randomNumber = Math.floor(Math.random()*response.length);
     postMessage(response[randomNumber]);
     this.res.end();
-  } if((request.sender_type != "bot" && request.user_id != '43525551') && request.text && tagRegex_bot.test(request.text)) {
+  } if((request.sender_type != "bot" && request.user_id != SquadBot) && request.text && tagRegex_bot.test(request.text)) {
       if(/(\bhi|hello|hey|heyo|sup|wassup\b).*?/i.test(request.text) || /\b(good morning)\b/i.test(request.text)) {
       this.res.writeHead(200);
-      Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine day?", "😜", "Yo."];
+      Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine day?", "😜", "Yo.","giphy hi","giphy hello"];
       randomNumber = Math.floor(Math.random()*Greetings.length);
+      response = response[randomNumber];
       likeMessage(request.id);
-      postMessage(Greetings[randomNumber]);
+      if(/giphy/i.test(response)){
+        response = response.replace(/giphy/i, '');
+        searchGiphy(response);
+      } else {
+        postMessage(response);
+      }
       this.res.end();
     } else if (/\b(thanks|(thank you)|thx)\b/i.test(request.text)) {
       response = ["You're welcome! 😊", "Don't mention it!",
@@ -649,21 +659,30 @@ function respond() {
     } else if (/\b(good night)|(bye)|(goodbye)|(goodnight)\b/i.test(request.text)) {
       response = ["Okay, bye!", "Laters.", "See ya!",
                   "In a while, crocodile.", "Good riddance.", "👋",
-                  "Didn\'t wanna talk anyway...", "Peace.", "Peace out.", "✌"];
+                  "Didn\'t wanna talk anyway...", "Peace.", "Peace out.", "✌",
+                   "giphy bye", "giphy goodbye", "giphy peace"];
       randomNumber = Math.floor(Math.random()*response.length);
+      response = response[randomNumber];
       likeMessage(request.id);
-      postMessage(response[randomNumber]);
+      if(/giphy/i.test(response)){
+        response = response.replace(/giphy/i, '');
+        searchGiphy(response);
+      } else {
+        postMessage(response);
+      }
     } else if(/(\b(fuck|fuck you|suck|sucks)\b)(.*?)/i.test(request.text)) {
       this.res.writeHead(200);
       response = ["Well fuck you too.", "Why you gotta be so mean?",
-                  "Whatever", "Rude...", "Ok...and?", "Damn okay then...", "😒"];
+                  "Whatever", "Rude...", "Ok...and?", "Damn okay then...", "😒",
+                  "giphy fuck you", "giphy rude","giphy girl bye"];
       randomNumber = Math.floor(Math.random()*response.length);
-      postMessage(response[randomNumber]);
-      this.res.end();
-    } else if (/^(?=.*\b(wifi|wi-fi)\b)(?=.*\bpassword\b).*$/im.test(request.text)) {
-      this.res.writeHead(200);
-      postMessage("I don't know any relevent wifi codes yet");
-      likeMessage(request.id);
+      response = response[randomNumber];
+      if(/giphy/i.test(response)){
+        response = response.replace(/giphy/i, '');
+        searchGiphy(response);
+      } else {
+        postMessage(response);
+      }
       this.res.end();
     } else if (!askme) {
       this.res.writeHead(200);
@@ -673,6 +692,7 @@ function respond() {
         console.log("Contacting Cleverbot AI server with: \"" + cleverQuestion + "\"");
         cleverBot.ask(cleverQuestion, function (err, response) {
           if (response == "Error, the reference \"\" does not exist" || response == 'Site error') {
+            console.log("ERROR: CLEVERBOT ERROR: " + response)
         		newresponse = ["I have nothing to say to that...",
         		"I've lost my voice at the moment, try again later.",
         		"I can't talk right now.",
@@ -681,8 +701,8 @@ function respond() {
         		newresponse = newresponse[randomNumber];
           } else {
             likeMessage(request.id);
-            if (userIDNum=="43525551"){
-              if (last_userIDNum == "43525551"){
+            if (userIDNum==SquadBot){
+              if (last_userIDNum == SquadBot){
                 userName = seclast_userName; userIDNum = seclast_userIDNum;
               } else {
                 userName = last_userName; userIDNum = last_userIDNum;
@@ -706,7 +726,10 @@ function respond() {
 }
 
 console.log("Response okay...")
+/////////////////////////////////////////////////////////////////////////////////////
 
+///   OTHER FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////
 function getMath(equation) {
   var options = {
     host: 'api.wolframalpha.com',
@@ -726,9 +749,10 @@ function getMath(equation) {
       JSONstr = xmlToJson(str);
       if (!(JSONstr)) {
         postMessage('Can\'t calculate that...');
+        console.log("ERROR: WOLFRAM DID NOT SEND AN APPROPRIATE RESPONSE")
       } else {
         var response = JSONstr;
-        console.log("WOLFRAM RESPONSE: ");
+        console.log("Wolfram response: ");
         console.log(response);
       }
     });
@@ -874,7 +898,7 @@ function getInfo(groupID) {
 
     response.on('end', function() {
       if (!(str && JSON.parse(str))) {
-        console.log("COULD NOT GET GROUP INFO!");
+        console.log("ERROR: COULD NOT GET GROUP INFO!");
         console.log("RESULT WAS: ");
         console.log(str);
       } else {
@@ -886,6 +910,7 @@ function getInfo(groupID) {
 
   HTTP.request(options, callback).end();
 }
+/////////////////////////////////////////////////////////////////////////////////////
 
 console.log("Running application...")
 
