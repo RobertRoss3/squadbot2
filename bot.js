@@ -21,6 +21,7 @@ var async = require('async');
 /////////////////////////////////////////////////////////////////////////////////////
 var refresh = (new Date().getTime() / 1000) - 120;
 var SquadBot = '43525551';
+var giphyURL = 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
 
 // time arg is in milliseconds
 function delay(time) {var d1 = new Date();var d2 = new Date();while (d2.valueOf() < d1.valueOf() + time) {d2 = new Date();}}
@@ -30,7 +31,7 @@ last_response = " ";
 
 botInfo = "Hi, I'm SquadBot version 2.5.0! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
-          "Use /weather [now][today][this week] to get the weather for those times. \n" +
+          "Use /weather [now|today|this week] to get the weather for those times. \n" +
           "Use /math [problem] to solve math problems with WolframAlpha. \n" +
           "I'll respond to certain key words and phrases and you can also @ me to chat. \n" +
           "Use \'@mealplan\' to tag anyone with a meal plan and \'@GSU\' for anyone in the Statesboro area. \n" +
@@ -311,8 +312,8 @@ function respond() {
       randomNumber2 = Math.floor(Math.random()*topic.length);
       response += response2[randomNumber2];
       postMessage(response);
-      delay(2000);
-      searchGiphy(topic[randomNumber2]);
+      delay(3000);
+      searchGiphy(topic[randomNumber2])
       refresh = newtime;
     }
   }
@@ -790,7 +791,7 @@ function getMath(equation) {
 
 console.log("Wolfram okay...")
 
-function searchGiphy(giphyToSearch) {
+function searchGiphy(giphyToSearch, method) {
   var options = {
     host: 'api.giphy.com',
     path: '/v1/gifs/search?q=' + encodeQuery(giphyToSearch) + '&api_key=' + GiphyapiKey
@@ -805,17 +806,31 @@ function searchGiphy(giphyToSearch) {
 
     response.on('end', function() {
       if (!(str && JSON.parse(str))) {
-        postMessage('Couldn\'t find a gif...');
+        if(method=='text'){
+          // return 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+          giphyURL = 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+        } else {
+          postMessage('http://i.giphy.com/l1J9EdzfOSgfyueLm.gif');
+        }
       } else {
         gifs = JSON.parse(str).data;
         console.log("Available gifs: " + gifs.length);
         randomNumber = Math.floor(Math.random()*gifs.length);
-        if (gifs.length>0){
+        if (gifs && gifs.length>0){
           var id = gifs[randomNumber].id;
-          var giphyURL = 'http://i.giphy.com/' + id + '.gif';
-          postMessage(giphyURL);
+          giphyURL = 'http://i.giphy.com/' + id + '.gif';
+          if(method=='text'){
+            // return giphyURL;
+          } else {
+            postMessage(giphyURL);
+          }
         } else {
-          postMessage("Couldn\'t find a gif...");
+          if(method=='text'){
+            // return 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+            giphyURL = 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+          } else {
+            postMessage('http://i.giphy.com/l1J9EdzfOSgfyueLm.gif');
+          }
         }
       }
     });
@@ -827,7 +842,7 @@ function searchGiphy(giphyToSearch) {
 console.log("Giphy okay...")
 
 function encodeQuery(query) {
-  return query.replace(/\s/g, '+');;
+  return query.replace(/\s/g, '+');
 }
 
 // Changes XML to JSON
@@ -884,6 +899,26 @@ function postMessage(botResponse,type,args) {
         'user_ids' : args[1]
       }]}
     };
+  } else if (type=='image'){
+    console.log("Converting image URL: "+args)
+    ImageService.post(
+    args,
+        function(err,ret) {
+          if (err) {
+            console.log("ERROR: COULD NOT POST IMAGE: " +err)
+          } else {
+            console.log("Image posted! URL: "+ret);
+            options = {
+            'message':{
+              'source_guid': guid,
+              'text': botResponse,
+              'attachments' : [{
+                'type' : 'image',
+                'url' : ret
+              }]}
+            };
+          }
+        });
   } else {
     options = {
       'message':{
