@@ -522,8 +522,7 @@ function respond() {
       postMessage(botInfo);
     } if (request.text == "/restart") {
       likeMessage(request.id);
-      console.log("Restarting......")
-      process.exit(0);
+      restart();
     } if (request.text == "/listmembers") {
       likeMessage(request.id);
       API.Groups.show(accessToken, groupID, function(err,ret) {
@@ -640,8 +639,8 @@ function respond() {
   } if((request.sender_type != "bot" && request.user_id != SquadBot) && request.text && tagRegex_bot.test(request.text)) {
       if(/(\bhi|hello|hey|heyo|sup|wassup\b).*?/i.test(request.text) || /\b(good morning)\b/i.test(request.text)) {
       this.res.writeHead(200);
-      Greetings = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine day?", "😜", "Yo.","giphy hi","giphy hello"];
-      randomNumber = Math.floor(Math.random()*Greetings.length);
+      response = ["Hello!", "What\'s up?", "Hey.", "Hi!", "How are you on this fine day?", "😜", "Yo.","giphy hi","giphy hello"];
+      randomNumber = Math.floor(Math.random()*response.length);
       response = response[randomNumber];
       likeMessage(request.id);
       if(/giphy/i.test(response)){
@@ -941,19 +940,19 @@ function likeMessage(messageID) {
 
 function restart(){
   if(userIDNum=="28758543"){
-    likeMessage(request.id);
     console.log("Restarting...");
     response = ["Guess I fucked up!","Was it something I said?","Aw man...",
     "Oh...", "Sorry about that.","😒","Aight then..."];
-    randomNumber = Math.floor(Math.random()*Greetings.length);
+    randomNumber = Math.floor(Math.random()*response.length);
     response = response[randomNumber] += " Restarting...";
     postMessage(response);
+    delay(2000);
     process.exit(0);
   } else {
     response = ["Nah...","https://i.giphy.com/media/fnuSiwXMTV3zmYDf6k/giphy.gif","Um... No?",
     "I'm not gonna do that.","Access denied: Unauthorized user","Error: Does not compute",
     "What?"];
-    randomNumber = Math.floor(Math.random()*Greetings.length);
+    randomNumber = Math.floor(Math.random()*response.length);
     response = response[randomNumber];
     postMessage(response);
   }
