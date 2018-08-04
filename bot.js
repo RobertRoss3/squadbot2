@@ -15,6 +15,7 @@ var Guid = require('guid');
 var GoogleSpreadsheet = require('google-spreadsheet');
 var async = require('async');
 // var NodeGeocoder = require('node-geocoder');
+var YTsearch = require('youtube-search');
 /////////////////////////////////////////////////////////////////////////////////////
 
 ///   GENERAL FUNCTIONS AND VARIABLES
@@ -29,7 +30,7 @@ function delay(time) {var d1 = new Date();var d2 = new Date();while (d2.valueOf(
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
 
-botInfo = "Hi, I'm SquadBot version 2.5.3! \n" +
+botInfo = "Hi, I'm SquadBot version 2.6.0! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
           "Use /weather [now|today|this week] to get the weather for those times. \n" +
           "Use /math [problem] to solve math problems with WolframAlpha. \n" +
@@ -166,6 +167,11 @@ var cleverKey = process.env.CLEVER_KEY;
 var weatherKey = process.env.WEATHER_KEY;
 var mathKey = process.env.MATH_KEY;
     Wolfram = new wolfClient(mathKey);
+var YoutubeKey = process.env.YOUTUBE_API_KEY;
+var YTsearchopts = {
+  maxResults: 10,
+  key: YoutubeKey
+};
 // var GeoCoder_options = {
 //   provider: 'mapquest',
 //   // Optional depending on the providers
@@ -206,6 +212,7 @@ API.Groups.show(accessToken, groupID, function(err,ret) {
     }
   } else {console.log("ERROR: FAILED GETTING GROUP INFO" + err);}
 });
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 ///   MAIN RESPONSE
@@ -478,9 +485,8 @@ function respond() {
             answer = "I can't calculate that...";
           }
         }
-    });
-  }
-  else if (/\bweather\b/i.test(request.text)) {
+    });}
+    else if (/\bweather\b/i.test(request.text)) {
       Regexnow = /\b(now|current)\b/i; Regextoday = /\b(today|day)\b/i;
       Regexweek = /\b(this week)|(for the week)|(week)\b/i;
       // Retrieve weather information from Statesboro
@@ -535,7 +541,8 @@ function respond() {
           console.log("IDs: " + AllIDs);
         } else {console.log("ERROR: FAILED GETTING GROUP INFO: " + err);}
       });
-    } if (/^([\/]quote)/i.test(request.text)) {
+    }
+    else if (/^([\/]quote)/i.test(request.text)) {
       if (!Quotes_info){delay(5000);if (!quotecount){delay(2000);}}
       likeMessage(request.id);
       if (!botRegex_oneword.test(request.text)) {                  //If it's just "/quote"
@@ -560,7 +567,8 @@ function respond() {
           postMessage(Quotes[randomNumber].replace(/\\n/g,'\n'));
         }
       }
-    } if (/^([\/]8ball)/i.test(request.text)){
+    }
+    else if (/^([\/]8ball)/i.test(request.text)){
       likeMessage(request.id);
       if(botRegex_oneword.test(request.text)){
       	names = ["Sara", "Lauren", "Amy", "Elias", "your mom", "your neighbor", "your conscience"];
@@ -584,7 +592,28 @@ function respond() {
       } else {
         postMessage("🎱 You have to ask a yes or no question.");
       }
-    } else {
+    }
+    else if(/^\/\b(youtube|yt|video)\b/i.test(request.text)){
+      likeMessage(request.id);
+      searchTerm = request.text; searchTerm = searchTerm.replace(/\/\b(youtube|yt|video)\b/i,'');
+      var resultNum = 0;
+      if (/\([0-9]+\)/i.test(searchTerm)){
+          textsearchTerm = searchTerm.replace(/\([0-9]+\)/i,'');
+          resultNum = searchTerm.replace(textsearchTerm,'');
+          resultNum = Number(resultNum.replace(/\(|\)/ig,''))-1;
+          if(resultNum>9){
+              resultNum = 9;
+          }
+          searchTerm = textsearchTerm;
+      }
+      console.log("Looking for video "+(resultNum+1)+"/10 of\""+searchTerm+"\"...");
+      YTsearch(searchTerm, YTsearchopts, function(err, results) {
+        if(err) return console.log("YOUTUBE SEARCH ERROR: " +err);
+         console.dir(results[resultNum]);
+         postMessage(results[resultNum].link);
+      });
+    }
+    else {
       // postMessage("That isn't a valid command...");
     }
     this.res.end();
