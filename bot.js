@@ -30,7 +30,7 @@ function delay(time) {var d1 = new Date();var d2 = new Date();while (d2.valueOf(
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
 
-botInfo = "Hi, I'm SquadBot version 2.6.1! \n" +
+botInfo = "Hi, I'm SquadBot version 2.6.0! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
           "Use /weather [now|today|this week] to get the weather for those times. \n" +
           "Use /math [problem] to solve math problems with WolframAlpha. \n" +
@@ -156,7 +156,9 @@ var accessToken = process.env.ACCESS_TOKEN;
 var bingKey = process.env.BING_KEY;
 var cleverUser = process.env.CLEVER_USER;
 var cleverKey = process.env.CLEVER_KEY;
-    cleverBot = new cleverbot(cleverUser,cleverKey);
+// Old way of creating Cleverbot instance
+    // cleverBot = new cleverbot(cleverUser,cleverKey);
+    let cleverBot = new cleverbot(cleverUser, cleverKey);
     randomNumber = randomNumber = Math.floor(Math.random()*999);
     session = 'Squadbot1'+randomNumber;
     console.log("Loading Cleverbot AI session: " + session + "...")
@@ -164,9 +166,11 @@ var cleverKey = process.env.CLEVER_KEY;
     cleverBot.create(function (err, session) {
     });
     console.log("Cleverbot loading completed...")
+
 var weatherKey = process.env.WEATHER_KEY;
 var mathKey = process.env.MATH_KEY;
     Wolfram = new wolfClient(mathKey);
+    console.log("Wolfram okay...")
 var YoutubeKey = process.env.YOUTUBE_API_KEY;
 var YTsearchopts = {
   maxResults: 10,
@@ -321,7 +325,7 @@ function respond() {
       response += response2[randomNumber2];
       postMessage(response);
       delay(3000);
-      searchGiphy(topic[randomNumber2])
+      searchGiphy(topic[randomNumber2]);
       refresh = newtime;
     }
   }
@@ -749,7 +753,7 @@ function respond() {
       if (cleverQuestion) {
         console.log("Contacting Cleverbot AI server with: \"" + cleverQuestion + "\"");
         cleverBot.ask(cleverQuestion, function (err, response) {
-          if (response == "Error, the reference \"\" does not exist" || response == 'Site error') {
+          if (response == "Error, the reference \"\" does not exist" || response == 'Site error' || /(\b(Session not initialized)\b)(.*?)/i.test(response)) {
             console.log("ERROR: CLEVERBOT ERROR: " + response)
         		newresponse = ["I have nothing to say to that...",
         		"I've lost my voice at the moment, try again later.",
@@ -757,6 +761,7 @@ function respond() {
         		"My AI module has failed.", "I'm mute for the time being..."];
         		randomNumber = Math.floor(Math.random()*newresponse.length);
         		newresponse = newresponse[randomNumber];
+            postMessage(newresponse);
           } else {
             likeMessage(request.id);
             if (userIDNum==SquadBot){
@@ -819,8 +824,6 @@ function getMath(equation) {
   HTTP.request(options, callback).end();
 }
 
-console.log("Wolfram okay...")
-
 function searchGiphy(giphyToSearch, method) {
   var options = {
     host: 'api.giphy.com',
@@ -869,8 +872,6 @@ function searchGiphy(giphyToSearch, method) {
   HTTP.request(options, callback).end();
 }
 
-console.log("Giphy okay...")
-
 function encodeQuery(query) {
   return query.replace(/\s/g, '+');
 }
@@ -911,8 +912,6 @@ function xmlToJson(xml) {
 	}
 	return obj;
 };
-
-console.log("Extra stuff okay...")
 
 function postMessage(botResponse,type,args) {
   var botResponse, type, args, options, body, botReq, guid;
