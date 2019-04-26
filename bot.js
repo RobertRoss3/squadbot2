@@ -287,7 +287,7 @@ function respond() {
                   "- Florida Evans","- Anthony Fantano",
                   "- 800lb lady's brother"];
       randomNumber = Math.floor(Math.random()*response.length);
-      response = response[randomNumber1];
+      response = response[randomNumber];
       postMessage(response);
     }
     else if (tagRegex_bot.test(request.text)) {
