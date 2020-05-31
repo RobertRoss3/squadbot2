@@ -30,6 +30,7 @@ function delay(time) {var d1 = new Date();var d2 = new Date();while (d2.valueOf(
 
 last_userName = ' '; last_userIDNum = '00000000';
 last_response = " ";
+noImage = "https://media.giphy.com/media/l1J9EdzfOSgfyueLm/giphy.gif";
 
 botInfo = "Hi, I'm SquadBot version 2.6.6! \n" +
           "You can use commands like '/giphy [term]' and '/face' to post GIFs and ASCII faces. \n" +
@@ -899,21 +900,22 @@ function searchGiphy(giphyToSearch, method) {
       if (!(str && JSON.parse(str))) {
         if(method=='text'){
           // return 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
-          giphyURL = 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+          giphyURL = noImage;
         } else {
-          postMessage('http://i.giphy.com/l1J9EdzfOSgfyueLm.gif');
+          postMessage(noImage);
         }
       } else {
         gifs = JSON.parse(str).data;
         if(!gifs){
           console.log(JSON.stringify(gifs));
-          postMessage("http://i.giphy.com/l1J9EdzfOSgfyueLm.gif");
+          postMessage(noImage);
         } else {
           console.log("Available gifs: " + gifs.length);
           randomNumber = Math.floor(Math.random()*gifs.length);
           if (gifs && gifs.length>0){
             var id = gifs[randomNumber].id;
-            giphyURL = 'http://i.giphy.com/' + id + '.gif';
+            //giphyURL = 'http://i.giphy.com/' + id + '.gif';
+            giphyURL = 'https://media.giphy.com/media/' + id + '/giphy.gif';
             if(method=='text'){
               // return giphyURL;
             } else {
@@ -922,9 +924,9 @@ function searchGiphy(giphyToSearch, method) {
           } else {
             if(method=='text'){
               // return 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
-              giphyURL = 'http://i.giphy.com/l1J9EdzfOSgfyueLm.gif';
+              giphyURL = noImage;
             } else {
-              postMessage('http://i.giphy.com/l1J9EdzfOSgfyueLm.gif');
+              postMessage(noImage);
             }
           }
         }
@@ -991,27 +993,29 @@ function postMessage(botResponse,type,args) {
         'user_ids' : args[1]
       }]}
     };
-  } else if (type=='image'){
-    console.log("Converting image URL: "+args)
-    ImageService.post(
-    args,
-        function(err,ret) {
-          if (err) {
-            console.log("ERROR: COULD NOT POST IMAGE: " +err)
-          } else {
-            console.log("Image posted! URL: "+ret);
-            options = {
-            'message':{
-              'source_guid': guid,
-              'text': botResponse,
-              'attachments' : [{
-                'type' : 'image',
-                'url' : ret
-              }]}
-            };
-          }
-        });
-  } else {
+  }
+  // else if (type=='image'){
+  //   console.log("Converting image URL: "+args)
+  //   ImageService.post(
+  //   args,
+  //       function(err,ret) {
+  //         if (err) {
+  //           console.log("ERROR: COULD NOT POST IMAGE: " +err)
+  //         } else {
+  //           console.log("Image posted! URL: "+ret);
+  //           options = {
+  //           'message':{
+  //             'source_guid': guid,
+  //             'text': botResponse,
+  //             'attachments' : [{
+  //               'type' : 'image',
+  //               'url' : ret
+  //             }]}
+  //           };
+  //         }
+  //       });
+  // }
+   else {
     options = {
       'message':{
         'source_guid': guid,
@@ -1046,7 +1050,7 @@ function restart(){
     restarting = true;
     postMessage(response);
   } else {
-    response = ["Nah...","https://i.giphy.com/media/fnuSiwXMTV3zmYDf6k/giphy.gif","Um... No?",
+    response = ["Nah...","https://media.giphy.com/media/fnuSiwXMTV3zmYDf6k/giphy.gif","Um... No?",
     "I'm not gonna do that.","Access denied: Unauthorized user","Error: Does not compute",
     "What?","Nah chief"];
     randomNumber = Math.floor(Math.random()*response.length);
